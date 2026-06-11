@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeppesen Chart Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <h2>Tools</h2>
+            <button id="btn-load-folder" class="primary-btn">📁 Select Root Folder</button>
+            
+            <div class="filter-group" style="margin-top: 20px;">
+                <label for="search-country">Filter Country:</label>
+                <input type="text" id="search-country" placeholder="e.g. Poland, Germany" disabled>
+            </div>
+
+            <div class="filter-group">
+                <label for="cell-filter">Cells:</label>
+                <select id="cell-filter" disabled>
+                    <option value="">All Cells</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="type-filter">Chart Type:</label>
+                <select id="type-filter" disabled>
+                    <option value="">All Types</option>
+                    <option value="STAR">STAR</option>
+                    <option value="SID">SID</option>
+                    <option value="RMAC">RMAC</option>
+                    <option value="NOISE">NOISE</option>
+                </select>
+            </div>
+            
+            <div id="stats-display">Load folders to begin...</div>
+        </aside>
+
+        <section class="airports-panel">
+            <div class="panel-header">
+                <h3>Available Charts</h3>
+            </div>
+            <div id="charts-list-container" class="airports-list"></div>
+        </section>
+
+       <section class="viewer-panel">
+    <div class="viewer-header">
+        <label for="cycle-filter">Active AIRAC Cycle:</label>
+        <select id="cycle-filter" disabled></select>
+    </div>
+    <div class="viewer-content">
+        <div class="no-pdf" id="no-pdf-message">
+            <h3>No Chart Selected</h3>
+        </div>
+        <iframe id="pdf-viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
