@@ -3,18 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeppesen Chart Viewer</title>
+    <title>Chart Viewer</title>
     <link rel="stylesheet" href="style.css">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
     <div class="app-container">
         <aside class="sidebar">
-            <h2>Tools</h2>
-            <button id="btn-load-folder" class="primary-btn">📁 Select Root Folder</button>
             
-            <div class="filter-group" style="margin-top: 20px;">
+            <h2>⚙ Tools</h2>
+            <button id="btn-load-folder" class="primary-btn">📁 Select Root Folder</button>
+            <button id="btn-clear-data" class="secondary-button" style="margin-top: 10px; width: 100%; padding: 8px; cursor: pointer;">
+    Clear Cached Data
+</button>
+  <div id="stats-display"></div>
+
+<div id="status-badge" class="hidden"></div>
+            
+            <div class="filter-group">
                 <label for="search-country">Filter Country:</label>
                 <input type="text" id="search-country" placeholder="e.g. Poland, Germany" disabled>
             </div>
@@ -36,19 +47,47 @@
                     <option value="NOISE">NOISE</option>
                 </select>
             </div>
+<button id="btn-help" class="secondary-button" style="width:100%; margin-top:10px;">ℹ️ How to use</button>
+
+<div id="help-box" class="hidden" style="background:#202024; padding:15px; border-radius:6px; font-size:0.85rem; margin-top:10px; border:1px solid #007acc; color:#ddd;">
+    <h4 style="color:#007acc; margin-bottom:8px;">Quick Guide:</h4>
+    <ul style="padding-left: 20px; line-height: 1.6;">
+        <li><b>1. Select Folder:</b> Choose the main directory containing your AIRAC cycles.</li>
+        <li><b>2. Filter:</b> Type at least 3 letters in <i>Filter Country</i> to search. You can also search by Cells and Chart Types.</li>
+        <li><b>3. Navigate:</b> Click on any item in the list to open the chart.</li>
+        <li><b>4. PDF Search:</b> Use <b>Ctrl + F</b> while the PDF is focused to find text inside the chart.</li>
+        <li><b>5. Cycles:</b> Use the dropdown at the top-right to switch between AIRACs.</li>
+    </ul>
+</div>
             
-            <div id="stats-display">Load folders to begin...</div>
+<div id="stats-container" style="
+    padding: 10px;
+    font-size: 0.8rem;
+    color: #a8a8b3;
+    border-top: 1px solid #2d2d33;
+">
+<div id="footer-menu">
+    <div id="stats-container">
+        <div id="stats-charts">PDFs: 0</div>
+        <div id="stats-cycles">Cycles: 0</div>
+    </div>
+    <div id="build-info">Build 0.21.37</div>
+</div>
+            
         </aside>
 
         <section class="airports-panel">
             <div class="panel-header">
                 <h3>Available Charts</h3>
+                <span id="chart-count" style="font-size: 0.75rem; color: #888;"></span>
             </div>
+            
             <div id="charts-list-container" class="airports-list"></div>
         </section>
 
        <section class="viewer-panel">
     <div class="viewer-header">
+
         <label for="cycle-filter">Active AIRAC Cycle:</label>
         <select id="cycle-filter" disabled></select>
     </div>

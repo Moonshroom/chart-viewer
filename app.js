@@ -1,27 +1,77 @@
 let dbInstance = null;
-let chartDatabase = {}; 
+let chartDatabase = {};
 
-const DB_NAME = 'JeppesenViewerDB';
-const DB_VERSION = 3; 
+const DB_NAME = 'ViewerDB';
+const DB_VERSION = 3;
 const STORE_NAME = 'charts';
 
 const btnLoadFolder = document.getElementById('btn-load-folder');
+const btnClearData = document.getElementById('btn-clear-data');
 const searchCountryInput = document.getElementById('search-country');
-const cellFilterSelect = document.getElementById('cell-filter'); 
+const cellFilterSelect = document.getElementById('cell-filter');
 const typeFilterSelect = document.getElementById('type-filter');
 const cycleFilterSelect = document.getElementById('cycle-filter');
 const chartsListContainer = document.getElementById('charts-list-container');
 const pdfContainer = document.getElementById('pdf-container');
-const noPdfMessageBlock = document.getElementById('no-pdf-message');
-const statsDisplayDiv = document.getElementById('stats-display');
+const statusBadge = document.getElementById('status-badge');
+const btnHelp = document.getElementById('btn-help');
+const helpBox = document.getElementById('help-box');
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+// --- INICJALIZACJA ---
 window.addEventListener('DOMContentLoaded', async () => {
     await initIndexedDB();
     await loadChartsFromCache();
 });
 
+// --- EVENT LISTENERS ---
+btnLoadFolder.addEventListener('click', async () => {
+    const dirHandle = await window.showDirectoryPicker();
+    await performScan(dirHandle);
+});
+
+// Live Search z Debounce (opóźnienie 300ms)
+let searchTimer;
+searchCountryInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+        const val = e.target.value;
+        if (val.length >= 3 || val.length === 0) {
+            updateChartList();
+        }
+    }, 300);
+});
+
+
+btnHelp.addEventListener('click', () => {
+    helpBox.classList.toggle('hidden');
+    btnHelp.textContent = helpBox.classList.contains('hidden') ? 'ℹ️ How to use' : 'Hide Help';
+});
+
+[cellFilterSelect, typeFilterSelect, cycleFilterSelect].forEach(el => 
+    el.addEventListener('change', updateChartList)
+);
+cycleFilterSelect.addEventListener('change', () => { buildCellFilter(); updateChartList(); });
+
+btnClearData.addEventListener('click', () => {
+    if (confirm("Are you sure you want to clear all cached charts?")) {
+        const store = dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME);
+        store.clear().onsuccess = () => {
+            chartDatabase = {};
+            chartsListContainer.innerHTML = '';
+            cycleFilterSelect.innerHTML = '<option value="">No data</option>';
+            cellFilterSelect.innerHTML = '<option value="">All Cells</option>';
+            statusBadge.textContent = "Cache cleared";
+            statusBadge.classList.remove('hidden');
+            [searchCountryInput, cellFilterSelect, typeFilterSelect, cycleFilterSelect]
+                .forEach(el => el.disabled = true);
+            updateStatsDisplay();
+        };
+    }
+});
+
+// --- FUNKCJE BAZY DANYCH ---
 function initIndexedDB() {
     return new Promise((resolve) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -34,8 +84,31 @@ function initIndexedDB() {
     });
 }
 
+async function loadChartsFromCache() {
+    const store = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME);
+    store.getAll().onsuccess = (e) => {
+        const cachedItems = e.target.result;
+        if (cachedItems.length > 0) {
+            chartDatabase = {};
+            cachedItems.forEach(item => {
+                if (!chartDatabase[item.parentCycle]) chartDatabase[item.parentCycle] = [];
+                chartDatabase[item.parentCycle].push(item);
+            });
+            statusBadge.textContent = "Data loaded from cache";
+            statusBadge.classList.remove('hidden');
+            const cycles = Object.keys(chartDatabase).sort((a, b) => b.localeCompare(a, undefined, {numeric: true}));
+            unlockInterface();
+            buildCycleFilter(cycles);
+            buildCellFilter();
+            updateChartList();
+            updateStatsDisplay();
+        }
+    };
+}
+
 async function performScan(handle) {
-    statsDisplayDiv.textContent = "Processing files...";
+    statusBadge.textContent = "Processing files...";
+    statusBadge.classList.remove('hidden');
     const store = dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME);
     store.clear();
     chartDatabase = {};
@@ -47,9 +120,11 @@ async function performScan(handle) {
     buildCycleFilter(cycles);
     buildCellFilter();
     updateChartList();
-    statsDisplayDiv.textContent = "Data ready.";
+    updateStatsDisplay();
+    statusBadge.textContent = "Data ready.";
 }
 
+// --- FUNKCJE POMOCNICZE UI ---
 async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderName) {
     for await (const entry of dirHandle.values()) {
         if (entry.kind === 'directory') {
@@ -91,60 +166,54 @@ function buildCellFilter() {
 
 function updateChartList() {
     chartsListContainer.innerHTML = '';
+    
+    // Filtrowanie
     const filtered = chartDatabase[cycleFilterSelect.value]?.filter(i => 
         i.country.toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
         (typeFilterSelect.value === "" || i.type === typeFilterSelect.value) &&
         (cellFilterSelect.value === "" || i.folderName === cellFilterSelect.value)
     ).sort((a,b) => a.country.localeCompare(b.country) || a.folderName.localeCompare(b.folderName));
 
+    // Aktualizacja licznika (zakładam, że dodałeś <span id="chart-count"></span> w HTML)
+    const countDisplay = document.getElementById('chart-count');
+    if (countDisplay) {
+        countDisplay.textContent = filtered ? `${filtered.length} found` : "0 found";
+    }
+
+    // Renderowanie listy
     filtered?.forEach(chart => {
         const btn = document.createElement('button');
         btn.className = 'airport-item';
-        btn.innerHTML = `<div style="color:#e1e1e6; font-weight:bold; font-size:1.05rem;">🌍 ${chart.country}</div>
-                         <div style="font-size:0.85rem; color:#a8a8b3; margin-top:6px;">
-                            <span style="color:#007acc; font-weight:600;">${chart.type}</span> • 📁 <span style="color:#fff; font-weight:500;">${chart.folderName}</span>
-                         </div>`;
+        btn.innerHTML = `
+            <div style="color:#e1e1e6; font-weight:bold; font-size:1.05rem;">🌍 ${chart.country}</div>
+            <div style="font-size:0.85rem; color:#a8a8b3; margin-top:6px;">
+                <span style="color:#007acc; font-weight:600;">${chart.type}</span> • 
+                📁 <span style="color:#fff; font-weight:500;">${chart.folderName}</span> • 
+                <span class="cycle-badge">📅 ${chart.parentCycle}</span>
+            </div>`;
         
-btn.onclick = () => {
-    const viewer = document.getElementById('pdf-viewer');
-    const noPdfMsg = document.getElementById('no-pdf-message');
-    
-    if (noPdfMsg) noPdfMsg.style.display = 'none';
-    
-    const url = URL.createObjectURL(chart.fileBlob);
-    
-    // Wskazujemy na lokalny viewer.html z folderu /pdfjs/web/
-    // To uruchomi pełny interfejs Mozilli z paskiem narzędzi i wyszukiwaniem
-    viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(url)}`;
-    viewer.style.display = 'block';
-};
+        btn.onclick = () => {
+            // Dodaj/usuń klasę 'active' dla wizualnego feedbacku
+            document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+
+            const viewer = document.getElementById('pdf-viewer');
+            const noPdfMsg = document.getElementById('no-pdf-message');
+            
+            if (noPdfMsg) noPdfMsg.style.display = 'none';
+            
+            const url = URL.createObjectURL(chart.fileBlob);
+            viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(url)}`;
+            viewer.style.display = 'block';
+        };
+        
         chartsListContainer.appendChild(btn);
     });
 }
 
-btnLoadFolder.addEventListener('click', async () => {
-    const dirHandle = await window.showDirectoryPicker();
-    await performScan(dirHandle);
-});
-
-[searchCountryInput, cellFilterSelect, typeFilterSelect, cycleFilterSelect].forEach(el => el.addEventListener('change', updateChartList));
-cycleFilterSelect.addEventListener('change', () => { buildCellFilter(); updateChartList(); });
-
-async function loadChartsFromCache() {
-    const store = dbInstance.transaction([STORE_NAME], 'readonly').objectStore(STORE_NAME);
-    store.getAll().onsuccess = (e) => {
-        const cachedItems = e.target.result;
-        if (cachedItems.length > 0) {
-            chartDatabase = {};
-            cachedItems.forEach(item => {
-                if (!chartDatabase[item.parentCycle]) chartDatabase[item.parentCycle] = [];
-                chartDatabase[item.parentCycle].push(item);
-            });
-            const cycles = Object.keys(chartDatabase).sort((a, b) => b.localeCompare(a, undefined, {numeric: true}));
-            unlockInterface();
-            buildCycleFilter(cycles);
-            buildCellFilter();
-            updateChartList();
-        }
-    };
+function updateStatsDisplay() {
+    const totalCharts = Object.values(chartDatabase).flat().length;
+    const totalCycles = Object.keys(chartDatabase).length;
+    document.getElementById('stats-charts').textContent = `PDFs: ${totalCharts}`;
+    document.getElementById('stats-cycles').textContent = `Cycles: ${totalCycles}`;
 }

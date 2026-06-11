@@ -56,9 +56,10 @@ body {
   gap: 5px;
 }
 
+
 .app-container .sidebar .filter-group label {
   font-size: 0.8rem;
-  color: #a8a8b3;
+  color: #c9c9d3;
 }
 
 .app-container .sidebar input, .app-container .sidebar select {
@@ -68,6 +69,10 @@ body {
   padding: 8px;
   border-radius: 6px;
   outline: none;
+}
+
+.hidden {
+    display: none;
 }
 
 .app-container .sidebar input:disabled, .app-container .sidebar select:disabled {
@@ -110,6 +115,31 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.airport-item.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.app-container .airports-panel .airport-item {
+    background-color: #1a1a1e;
+    border: 1px solid #29292e;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    /* Poniżej masz już transition: all 0.2s; to jest poprawne */
+    transition: all 0.2s ease-in-out;
+    text-align: left;
+    width: 100%;
+    /* Dodaj to, żeby przy pojawieniu się listy był efekt "wejścia" */
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .app-container .airports-panel .airport-item {
@@ -212,4 +242,86 @@ body {
 .viewer-panel .viewer-content .no-pdf h3 {
   margin-bottom: 10px;
   color: #e1e1e6;
+}
+
+.cycle-badge {
+    background-color: #203049;
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+#footer-menu {
+    margin-top: auto; /* Wypycha wszystko na sam dół paska bocznego */
+    border-top: 1px solid #1a1a1a;
+    padding: 10px;
+    text-align: center;
+}
+
+#stats-container {
+    padding: 15px;
+    margin-top: auto; /* Zepchnięcie na sam dół */
+    font-size: 0.97rem;
+    color: #727272; /* BARDZO CIEMNY SZARY - prawie niewidoczny */
+    text-align: center;
+    border-top: 1px solid #1a1a1a;
+}
+
+#build-info {
+    font-size: 0.75rem;
+    color: #707070; /* Najciemniejsze, ledwo widoczne */
+}
+
+#status-badge {
+    padding: 8px 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-align: center;
+    background: #1a1a20; /* Ciemniejszy od tła */
+    color: #888;
+    border: 1px solid #2d2d33;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.secondary-button {
+    background-color: #2d2d33;
+    color: #a8a8b3;
+    border: 1px solid #3e3e4a;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.secondary-button:hover {
+    background-color: #3e3e4a;
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+    background: #16161a; 
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #29292e; 
+    border-radius: 5px;
+    border: 2px solid #16161a; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3e3e4a; 
 }
