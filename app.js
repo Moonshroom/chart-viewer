@@ -19,19 +19,19 @@ const helpBox = document.getElementById('help-box');
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// --- INICJALIZACJA ---
+
 window.addEventListener('DOMContentLoaded', async () => {
     await initIndexedDB();
     await loadChartsFromCache();
 });
 
-// --- EVENT LISTENERS ---
+
 btnLoadFolder.addEventListener('click', async () => {
     const dirHandle = await window.showDirectoryPicker();
     await performScan(dirHandle);
 });
 
-// Live Search z Debounce (opóźnienie 300ms)
+
 let searchTimer;
 searchCountryInput.addEventListener('input', (e) => {
     clearTimeout(searchTimer);
@@ -71,7 +71,7 @@ btnClearData.addEventListener('click', () => {
     }
 });
 
-// --- FUNKCJE BAZY DANYCH ---
+
 function initIndexedDB() {
     return new Promise((resolve) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
@@ -124,7 +124,7 @@ async function performScan(handle) {
     statusBadge.textContent = "Data ready.";
 }
 
-// --- FUNKCJE POMOCNICZE UI ---
+
 async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderName) {
     for await (const entry of dirHandle.values()) {
         if (entry.kind === 'directory') {
@@ -167,33 +167,34 @@ function buildCellFilter() {
 function updateChartList() {
     chartsListContainer.innerHTML = '';
     
-    // Filtrowanie
+
     const filtered = chartDatabase[cycleFilterSelect.value]?.filter(i => 
         i.country.toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
         (typeFilterSelect.value === "" || i.type === typeFilterSelect.value) &&
         (cellFilterSelect.value === "" || i.folderName === cellFilterSelect.value)
     ).sort((a,b) => a.country.localeCompare(b.country) || a.folderName.localeCompare(b.folderName));
 
-    // Aktualizacja licznika (zakładam, że dodałeś <span id="chart-count"></span> w HTML)
     const countDisplay = document.getElementById('chart-count');
     if (countDisplay) {
         countDisplay.textContent = filtered ? `${filtered.length} found` : "0 found";
     }
 
-    // Renderowanie listy
+
     filtered?.forEach(chart => {
         const btn = document.createElement('button');
         btn.className = 'airport-item';
-        btn.innerHTML = `
-            <div style="color:#e1e1e6; font-weight:bold; font-size:1.05rem;">🌍 ${chart.country}</div>
-            <div style="font-size:0.85rem; color:#a8a8b3; margin-top:6px;">
-                <span style="color:#007acc; font-weight:600;">${chart.type}</span> • 
-                📁 <span style="color:#fff; font-weight:500;">${chart.folderName}</span> • 
-                <span class="cycle-badge">📅 ${chart.parentCycle}</span>
-            </div>`;
+        // console.log(chart)
+const typeClass = `type-${chart.type.toLowerCase()}`;
+
+btn.innerHTML = `
+    <div class="country-title">${chart.country}</div>
+    <div class="chart-details">
+        <span class="chart-type ${typeClass}">${chart.type}</span>
+        <span class="chart-folder">📁 ${chart.folderName}</span>
+        <span class="cycle-badge">📅 ${chart.fullName.replace('.pdf','').split('_').pop()}</span>
+    </div>`;
         
         btn.onclick = () => {
-            // Dodaj/usuń klasę 'active' dla wizualnego feedbacku
             document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
 

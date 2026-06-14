@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chart Viewer</title>
+    <title>chart-viewer</title>
     <link rel="stylesheet" href="style.css">
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./Favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./Favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./Favicon/favicon-16x16.png">
 <link rel="manifest" href="/site.webmanifest">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -77,19 +77,21 @@
         </aside>
 
         <section class="airports-panel">
-            <div class="panel-header">
-                <h3>Available Charts</h3>
-                <span id="chart-count" style="font-size: 0.75rem; color: #888;"></span>
-            </div>
+           <div class="panel-header">
+    <div class="header-main">
+        <h3>Available PDFs:
+    <br><span id="chart-count" class="result-badge" style="font-size: 0.95rem; color: #888;">0 found</span></h3>
+
+        <select id="cycle-filter" class="panel-select" disabled></select>
+    </div>
+    
+</div>
             
             <div id="charts-list-container" class="airports-list"></div>
         </section>
 
        <section class="viewer-panel">
     <div class="viewer-header">
-
-        <label for="cycle-filter">Active AIRAC Cycle:</label>
-        <select id="cycle-filter" disabled></select>
     </div>
     <div class="viewer-content">
         <div class="no-pdf" id="no-pdf-message">

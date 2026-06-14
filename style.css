@@ -98,9 +98,31 @@ body {
   flex-direction: column;
 }
 
-.app-container .airports-panel .panel-header {
+.panel-header {
   padding: 15px;
   border-bottom: 1px solid #29292e;
+  border-bottom: 1px solid #333;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;   
+    justify-content: space-between; 
+    gap: 15px;              
+    margin-bottom: 8px;    
+}
+
+.header-main h3 {
+    margin: 0;
+}
+
+.panel-select {
+background: #25252a;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .app-container .airports-panel .panel-header h3 {
@@ -129,11 +151,9 @@ body {
     padding: 12px;
     border-radius: 6px;
     cursor: pointer;
-    /* Poniżej masz już transition: all 0.2s; to jest poprawne */
     transition: all 0.2s ease-in-out;
     text-align: left;
     width: 100%;
-    /* Dodaj to, żeby przy pojawieniu się listy był efekt "wejścia" */
     animation: fadeIn 0.2s ease-in-out;
 }
 
@@ -173,6 +193,7 @@ body {
   color: #007acc;
 }
 
+
 .app-container .airports-panel .airport-item .name {
   font-size: 0.85rem;
   color: #e1e1e6;
@@ -185,7 +206,7 @@ body {
   margin-top: 4px;
 }
 
-/* NOWE STYLE DLA PRAWEGO PANELU Z WYBOREM CYKLU NA GÓRZE */
+
 .viewer-panel {
   flex: 1;
   background-color: #202024;
@@ -244,18 +265,71 @@ body {
   color: #e1e1e6;
 }
 
-.cycle-badge {
-    background-color: #203049;
+.airport-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #333;
+    cursor: pointer;
+}
+
+.airport-item:hover {
+    background: #1e1e1e;
+}
+
+.airport-item.active {
+    border-left: 4px solid #007acc;
+    background: #1a1a1a;
+}
+
+/* Teksty wewnątrz */
+.country-title {
+    color: #e1e1e6;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.chart-details {
+    display: flex;
+    justify-content: flex-start;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #a8a8b3;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.chart-type {
+    background-color: #244780;
     color: #ffffff;
-    padding: 2px 6px;
+    padding: 3px 8px;
     border-radius: 4px;
     font-size: 0.75rem;
     font-weight: bold;
     margin-left: 4px;
+    text-transform: uppercase;
+}
+
+.type-sid   { background-color: #1a7f45; border: 1px solid #2ecc71; } /* Soczysta zieleń */
+.type-star  { background-color: #b45309; border: 1px solid #fbbf24; } /* Głęboki pomarańcz */
+.type-rmac  { background-color: #6d28d9; border: 1px solid #a78bfa; } /* Nasycony fiolet */
+.type-noise { background-color: #9f1239; border: 1px solid #fb7185; } /* Wyrazista czerwień/róż */
+.type-other { background-color: #374151; border: 1px solid #6b7280; } /* Ciemnoszary */
+
+.chart-folder {
+    color: #fff;
+    font-weight: 500;
+}
+
+.cycle-badge {
+    color: #fff;
+    font-weight: 500;
 }
 
 #footer-menu {
-    margin-top: auto; /* Wypycha wszystko na sam dół paska bocznego */
+    margin-top: auto; 
     border-top: 1px solid #1a1a1a;
     padding: 10px;
     text-align: center;
@@ -263,16 +337,16 @@ body {
 
 #stats-container {
     padding: 15px;
-    margin-top: auto; /* Zepchnięcie na sam dół */
+    margin-top: auto; 
     font-size: 0.97rem;
-    color: #727272; /* BARDZO CIEMNY SZARY - prawie niewidoczny */
+    color: #727272; 
     text-align: center;
     border-top: 1px solid #1a1a1a;
 }
 
 #build-info {
     font-size: 0.75rem;
-    color: #707070; /* Najciemniejsze, ledwo widoczne */
+    color: #707070; 
 }
 
 #status-badge {
@@ -282,7 +356,7 @@ body {
     font-size: 0.7rem;
     font-weight: 500;
     text-align: center;
-    background: #1a1a20; /* Ciemniejszy od tła */
+    background: #1a1a20;
     color: #888;
     border: 1px solid #2d2d33;
     transition: all 0.3s ease;
