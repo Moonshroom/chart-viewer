@@ -128,7 +128,7 @@ async function performScan(handle) {
 async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderName) {
     for await (const entry of dirHandle.values()) {
         if (entry.kind === 'directory') {
-            let nextCycle = currentCycle || (entry.name.match(/^26\d{2}$/) ? entry.name : '');
+            let nextCycle = currentCycle || (entry.name.match(/^20\d{2}$/) ? entry.name : '');
             let nextFolderName = currentCycle ? entry.name : parentFolderName;
             await scanDirectoryRecursively(entry, nextCycle, nextFolderName);
         } else if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.pdf')) {
@@ -140,6 +140,8 @@ async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderNam
                 else if (nameUpper.includes('SID')) type = 'SID';
                 else if (nameUpper.includes('RMAC')) type = 'RMAC';
                 else if (nameUpper.includes('NOISE')) type = 'NOISE';
+                else if (nameUpper.includes('GNSS-ARRS')) type = 'GNSS-ARRS';
+                else if (nameUpper.includes('ABP')) type = 'ABP';
                 
                 const record = { parentCycle: currentCycle, country: parts[0], folderName: parentFolderName || 'Root', type, fileBlob: await entry.getFile(), fullName: entry.name };
                 if (!chartDatabase[currentCycle]) chartDatabase[currentCycle] = [];
@@ -155,7 +157,7 @@ function unlockInterface() {
 }
 
 function buildCycleFilter(cycles) {
-    cycleFilterSelect.innerHTML = cycles.map(c => `<option value="${c}">Cycle ${c}</option>`).join('');
+    cycleFilterSelect.innerHTML = cycles.map(c => `<option value="${c}">Date base year: ${c}</option>`).join('');
 }
 
 function buildCellFilter() {
@@ -215,6 +217,6 @@ btn.innerHTML = `
 function updateStatsDisplay() {
     const totalCharts = Object.values(chartDatabase).flat().length;
     const totalCycles = Object.keys(chartDatabase).length;
-    document.getElementById('stats-charts').textContent = `PDFs: ${totalCharts}`;
-    document.getElementById('stats-cycles').textContent = `Cycles: ${totalCycles}`;
+    document.getElementById('stats-charts').textContent = `PDFs found: ${totalCharts}`;
+    document.getElementById('stats-cycles').textContent = `DateBases found: ${totalCycles}`;
 }

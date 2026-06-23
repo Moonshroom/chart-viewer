@@ -12,7 +12,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-
+<div id="update-popup" class="popup-overlay">
+    <div class="popup-content">
+        <h2>PDF Database Update</h2>
+        <p>On 23/06/2026, the PDF database was updated.</p><br>
+        <p><b>New features:</b> Added support for <b>ABP</b> and <b>GNSS-ARRS</b> procedure types.</p><br>
+        <p><b> New PDFs for cells:</b> <b>WH1</b> and <b>WH3</b></p>
+        <br>
+    
+        <p style="color: #d32f2f; font-weight: bold;"><b>CAUTION</b><br>Instructions: Please clear your cache data via button in upper-left corner and reload the PDFs using the "Select Root Folder" option.</p>
+        <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
+    </div>
+</div>
     <div class="app-container">
         <aside class="sidebar">
             
@@ -45,6 +56,8 @@
                     <option value="SID">SID</option>
                     <option value="RMAC">RMAC</option>
                     <option value="NOISE">NOISE</option>
+                    <option value="ABP">ABP</option>
+                    <option value="GNSS-ARRS">GNSS-ARRS</option>
                 </select>
             </div>
 <button id="btn-help" class="secondary-button" style="width:100%; margin-top:10px;">ℹ️ How to use</button>
@@ -68,10 +81,10 @@
 ">
 <div id="footer-menu">
     <div id="stats-container">
-        <div id="stats-charts">PDFs: 0</div>
-        <div id="stats-cycles">Cycles: 0</div>
+        <div id="stats-charts">PDFs found: 0</div>
+        <div id="stats-cycles">DateBases found: 0</div>
     </div>
-    <div id="build-info">Build 0.21.37</div>
+    <div id="build-info">Build 0.5 - SIDSTAR testing phase</div>
 </div>
             
         </aside>
@@ -81,8 +94,7 @@
     <div class="header-main">
         <h3>Available PDFs:
     <br><span id="chart-count" class="result-badge" style="font-size: 0.95rem; color: #888;">0 found</span></h3>
-
-        <select id="cycle-filter" class="panel-select" disabled></select>
+        <select id="cycle-filter" class="panel-select" aria-label="Select year cycle" ></select>
     </div>
     
 </div>
@@ -92,12 +104,16 @@
 
        <section class="viewer-panel">
     <div class="viewer-header">
+        <div class="warning-banner">
+    ⚠️ Those charts are not up to date, use it only as a reference for specification or notes.
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+</div>
     </div>
     <div class="viewer-content">
         <div class="no-pdf" id="no-pdf-message">
             <h3>No Chart Selected</h3>
         </div>
-        <iframe id="pdf-viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
+        <iframe id="pdf-viewer" title="PDF Viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
     </div>
 </section>
     </div>
