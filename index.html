@@ -14,13 +14,16 @@
 <body>
 <div id="update-popup" class="popup-overlay">
     <div class="popup-content">
-        <h2>PDF Database Update</h2>
-        <p>On 23/06/2026, the PDF database was updated.</p><br>
-        <p><b>New features:</b> Added support for <b>ABP</b> and <b>GNSS-ARRS</b> procedure types.</p><br>
-        <p><b> New PDFs for cells:</b> <b>WH1</b> and <b>WH3</b></p>
+        <h2>PDF Database Update</h2><br>
+        <p>On 25/06/2026, the PDF database was updated.</p><br>
+        <p><b>New features:</b> Added support for <b>Approach Chart Types</b>.</p><br>
+        <p>1.<b> New PDFs for cells:</b> <b>WH1</b> and <b>WH3</b> for SID/STAR.</p>
+        <p>2.<b> New PDFs for Approach Charting</b></p>
+        <p>3.<b> Rebuild Chart type selector for better organization</b></p>
+        </p><br>
         <br>
     
-        <p style="color: #d32f2f; font-weight: bold;"><b>CAUTION</b><br>Instructions: Please clear your cache data via button in upper-left corner and reload the PDFs using the "Select Root Folder" option.</p>
+        <p style="color: #d32f2f; font-weight: bold;"><b>CAUTION</b><br><p  style= "color: #ffd700;">Instructions: Please clear your cache data via button in upper-left corner and reload the PDFs using the "Select Root Folder" option.</p></p>
         <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
     </div>
 </div>
@@ -37,28 +40,31 @@
 <div id="status-badge" class="hidden"></div>
             
             <div class="filter-group">
-                <label for="search-country">Filter Country:</label>
+                <label for="search-country">Filter by Country:</label>
                 <input type="text" id="search-country" placeholder="e.g. Poland, Germany" disabled>
             </div>
 
             <div class="filter-group">
-                <label for="cell-filter">Cells:</label>
+                <label for="cell-filter">Filter by Cells:</label>
                 <select id="cell-filter" disabled>
                     <option value="">All Cells</option>
                 </select>
             </div>
 
             <div class="filter-group">
-                <label for="type-filter">Chart Type:</label>
-                <select id="type-filter" disabled>
-                    <option value="">All Types</option>
-                    <option value="STAR">STAR</option>
-                    <option value="SID">SID</option>
-                    <option value="RMAC">RMAC</option>
-                    <option value="NOISE">NOISE</option>
-                    <option value="ABP">ABP</option>
-                    <option value="GNSS-ARRS">GNSS-ARRS</option>
-                </select>
+<label>Chart Type:</label>
+<div id="type-filter-container" class="filter-wrapper">
+    <div class="main-filters">
+        <button onclick="setFilter('ALL')" id="btn-ALL" class="filter-btn active">All types</button>
+    </div>
+    <div class="main-filters">
+        <button onclick="setFilter('PROCEDURES')" id="btn-PROCEDURES" class="filter-btn">SID/STAR</button>
+        <button onclick="setFilter('APPROACH')" id="btn-APPROACH" class="filter-btn">APPROACH</button>
+    </div>
+    
+    <div class="detailed-filters" id="detailed-filters">
+        </div>
+</div>
             </div>
 <button id="btn-help" class="secondary-button" style="width:100%; margin-top:10px;">ℹ️ How to use</button>
 
@@ -84,7 +90,7 @@
         <div id="stats-charts">PDFs found: 0</div>
         <div id="stats-cycles">DateBases found: 0</div>
     </div>
-    <div id="build-info">Build 0.5 - SIDSTAR testing phase</div>
+    <div id="build-info">Build 0.6 - SSCh & APPCh testing</div>
 </div>
             
         </aside>

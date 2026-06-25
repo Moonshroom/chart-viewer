@@ -1,6 +1,12 @@
 let dbInstance = null;
 let chartDatabase = {};
-
+// Zastąp starą definicję selectedTypes i listę typów tym:
+const chartTypesList = ["ABP",  "SID", "AIRPORT", "STAR", "APP", "GNSS-ARRS", "NOISE", "RMAC"];
+let selectedTypes = new Set();
+const groups = {
+    PROCEDURES: ["SID", "STAR", "GNSS-ARRS", "RMAC", "NOISE"],
+    APPROACH: ["AIRPORT", "APP", "ABP"]
+};
 const DB_NAME = 'ViewerDB';
 const DB_VERSION = 3;
 const STORE_NAME = 'charts';
@@ -9,68 +15,104 @@ const btnLoadFolder = document.getElementById('btn-load-folder');
 const btnClearData = document.getElementById('btn-clear-data');
 const searchCountryInput = document.getElementById('search-country');
 const cellFilterSelect = document.getElementById('cell-filter');
-const typeFilterSelect = document.getElementById('type-filter');
 const cycleFilterSelect = document.getElementById('cycle-filter');
 const chartsListContainer = document.getElementById('charts-list-container');
-const pdfContainer = document.getElementById('pdf-container');
 const statusBadge = document.getElementById('status-badge');
 const btnHelp = document.getElementById('btn-help');
 const helpBox = document.getElementById('help-box');
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+window.addEventListener('DOMContentLoaded', async () => {
+    await initIndexedDB();
+    await loadChartsFromCache();
+    initTypeFilter();
+});
 
 window.addEventListener('DOMContentLoaded', async () => {
     await initIndexedDB();
     await loadChartsFromCache();
+    initTypeFilter(); // <--- DODAJ TO TUTAJ
 });
 
+function initTypeFilter() {
+    const container = document.getElementById('detailed-filters');
+    container.innerHTML = '';
+    
+    chartTypesList.forEach(type => {
+        const btn = document.createElement('button');
+        btn.textContent = type;
+        btn.className = 'filter-btn'; // Szary kolor z CSS
+        btn.id = `btn-${type}`;
+        btn.onclick = () => toggleType(type);
+        container.appendChild(btn);
+    });
+}
+
+function setFilter(mode) {
+    selectedTypes.clear();
+    // Reset wszystkich przycisków
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    
+    if (mode === 'ALL') {
+        document.getElementById('btn-ALL').classList.add('active');
+    } else {
+        document.getElementById(`btn-${mode}`).classList.add('active');
+        groups[mode].forEach(t => {
+            selectedTypes.add(t);
+            document.getElementById(`btn-${t}`).classList.add('active');
+        });
+    }
+    updateChartList();
+}
+
+function toggleType(type) {
+    // Logika zaznaczania
+    if (selectedTypes.has(type)) {
+        selectedTypes.delete(type);
+        document.getElementById(`btn-${type}`).classList.remove('active');
+    } else {
+        selectedTypes.add(type);
+        document.getElementById(`btn-${type}`).classList.add('active');
+    }
+    updateChartList();
+}
 
 btnLoadFolder.addEventListener('click', async () => {
     const dirHandle = await window.showDirectoryPicker();
     await performScan(dirHandle);
 });
 
-
 let searchTimer;
 searchCountryInput.addEventListener('input', (e) => {
     clearTimeout(searchTimer);
     searchTimer = setTimeout(() => {
-        const val = e.target.value;
-        if (val.length >= 3 || val.length === 0) {
-            updateChartList();
-        }
+        if (e.target.value.length >= 3 || e.target.value.length === 0) updateChartList();
     }, 300);
 });
-
 
 btnHelp.addEventListener('click', () => {
     helpBox.classList.toggle('hidden');
     btnHelp.textContent = helpBox.classList.contains('hidden') ? 'ℹ️ How to use' : 'Hide Help';
 });
 
-[cellFilterSelect, typeFilterSelect, cycleFilterSelect].forEach(el => 
-    el.addEventListener('change', updateChartList)
-);
-cycleFilterSelect.addEventListener('change', () => { buildCellFilter(); updateChartList(); });
+[cellFilterSelect, cycleFilterSelect].forEach(el => el.addEventListener('change', updateChartList));
+cycleFilterSelect.addEventListener('change', () => { buildCellFilter(); });
 
 btnClearData.addEventListener('click', () => {
     if (confirm("Are you sure you want to clear all cached charts?")) {
-        const store = dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME);
-        store.clear().onsuccess = () => {
+        dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).clear().onsuccess = () => {
             chartDatabase = {};
             chartsListContainer.innerHTML = '';
             cycleFilterSelect.innerHTML = '<option value="">No data</option>';
             cellFilterSelect.innerHTML = '<option value="">All Cells</option>';
             statusBadge.textContent = "Cache cleared";
             statusBadge.classList.remove('hidden');
-            [searchCountryInput, cellFilterSelect, typeFilterSelect, cycleFilterSelect]
-                .forEach(el => el.disabled = true);
+            [searchCountryInput, cellFilterSelect, cycleFilterSelect].forEach(el => el.disabled = true);
             updateStatsDisplay();
         };
     }
 });
-
 
 function initIndexedDB() {
     return new Promise((resolve) => {
@@ -94,8 +136,6 @@ async function loadChartsFromCache() {
                 if (!chartDatabase[item.parentCycle]) chartDatabase[item.parentCycle] = [];
                 chartDatabase[item.parentCycle].push(item);
             });
-            statusBadge.textContent = "Data loaded from cache";
-            statusBadge.classList.remove('hidden');
             const cycles = Object.keys(chartDatabase).sort((a, b) => b.localeCompare(a, undefined, {numeric: true}));
             unlockInterface();
             buildCycleFilter(cycles);
@@ -106,15 +146,49 @@ async function loadChartsFromCache() {
     };
 }
 
+function initTypeFilter() {
+    const container = document.getElementById('detailed-filters');
+    container.innerHTML = '';
+    
+    chartTypesList.forEach(type => {
+        const btn = document.createElement('button');
+        btn.textContent = type;
+        btn.className = 'filter-btn'; // Dodajemy klasę dla kolorów
+        btn.id = `btn-${type}`;
+        btn.onclick = () => toggleType(type);
+        container.appendChild(btn);
+    });
+}
+
+function setFilter(mode) {
+    selectedTypes.clear();
+    if (mode !== 'ALL') {
+        groups[mode].forEach(t => selectedTypes.add(t));
+    }
+    
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    if (mode === 'ALL') {
+        document.querySelector('button[onclick="setFilter(\'ALL\')"]').classList.add('active');
+    } else {
+        document.querySelector(`button[onclick="setFilter('${mode}')"]`).classList.add('active');
+        selectedTypes.forEach(t => document.getElementById(`btn-${t}`).classList.add('active'));
+    }
+    updateChartList();
+}
+
+function toggleType(type) {
+    if (selectedTypes.has(type)) selectedTypes.delete(type);
+    else selectedTypes.add(type);
+    document.getElementById(`btn-${type}`).classList.toggle('active');
+    updateChartList();
+}
+
 async function performScan(handle) {
     statusBadge.textContent = "Processing files...";
     statusBadge.classList.remove('hidden');
-    const store = dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME);
-    store.clear();
+    dbInstance.transaction([STORE_NAME], 'readwrite').objectStore(STORE_NAME).clear();
     chartDatabase = {};
-    
     await scanDirectoryRecursively(handle, '', '');
-    
     const cycles = Object.keys(chartDatabase).sort((a, b) => b.localeCompare(a, undefined, {numeric: true}));
     unlockInterface();
     buildCycleFilter(cycles);
@@ -123,7 +197,6 @@ async function performScan(handle) {
     updateStatsDisplay();
     statusBadge.textContent = "Data ready.";
 }
-
 
 async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderName) {
     for await (const entry of dirHandle.values()) {
@@ -136,11 +209,13 @@ async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderNam
                 const parts = entry.name.split('_');
                 const nameUpper = entry.name.toUpperCase();
                 let type = 'OTHER';
-                if (nameUpper.includes('STAR')) type = 'STAR';
+                if (nameUpper.includes('GNSS-ARRS')) type = 'GNSS-ARRS';
+                else if (nameUpper.includes('STAR')) type = 'STAR';
                 else if (nameUpper.includes('SID')) type = 'SID';
+                else if (nameUpper.includes('AIRPORT')) type = 'AIRPORT';
+                else if (nameUpper.includes('APP')) type = 'APP';
                 else if (nameUpper.includes('RMAC')) type = 'RMAC';
                 else if (nameUpper.includes('NOISE')) type = 'NOISE';
-                else if (nameUpper.includes('GNSS-ARRS')) type = 'GNSS-ARRS';
                 else if (nameUpper.includes('ABP')) type = 'ABP';
                 
                 const record = { parentCycle: currentCycle, country: parts[0], folderName: parentFolderName || 'Root', type, fileBlob: await entry.getFile(), fullName: entry.name };
@@ -153,7 +228,7 @@ async function scanDirectoryRecursively(dirHandle, currentCycle, parentFolderNam
 }
 
 function unlockInterface() {
-    [searchCountryInput, cellFilterSelect, typeFilterSelect, cycleFilterSelect].forEach(el => el.disabled = false);
+    [searchCountryInput, cellFilterSelect, cycleFilterSelect].forEach(el => el.disabled = false);
 }
 
 function buildCycleFilter(cycles) {
@@ -168,48 +243,32 @@ function buildCellFilter() {
 
 function updateChartList() {
     chartsListContainer.innerHTML = '';
-    
-
     const filtered = chartDatabase[cycleFilterSelect.value]?.filter(i => 
         i.country.toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
-        (typeFilterSelect.value === "" || i.type === typeFilterSelect.value) &&
+        (selectedTypes.size === 0 || selectedTypes.has(i.type)) &&
         (cellFilterSelect.value === "" || i.folderName === cellFilterSelect.value)
     ).sort((a,b) => a.country.localeCompare(b.country) || a.folderName.localeCompare(b.folderName));
 
     const countDisplay = document.getElementById('chart-count');
-    if (countDisplay) {
-        countDisplay.textContent = filtered ? `${filtered.length} found` : "0 found";
-    }
-
+    if (countDisplay) countDisplay.textContent = filtered ? `${filtered.length} found` : "0 found";
 
     filtered?.forEach(chart => {
         const btn = document.createElement('button');
         btn.className = 'airport-item';
-        // console.log(chart)
-const typeClass = `type-${chart.type.toLowerCase()}`;
-
-btn.innerHTML = `
-    <div class="country-title">${chart.country}</div>
-    <div class="chart-details">
-        <span class="chart-type ${typeClass}">${chart.type}</span>
-        <span class="chart-folder">📁 ${chart.folderName}</span>
-        <span class="cycle-badge">📅 ${chart.fullName.replace('.pdf','').split('_').pop()}</span>
-    </div>`;
-        
+        btn.innerHTML = `<div class="country-title">${chart.country}</div>
+            <div class="chart-details">
+                <span class="chart-type type-${chart.type.toLowerCase()}">${chart.type}</span>
+                <span class="chart-folder">📁 ${chart.folderName}</span>
+                <span class="cycle-badge">📅 ${chart.fullName.replace('.pdf','').split('_').pop()}</span>
+            </div>`;
         btn.onclick = () => {
             document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
-
             const viewer = document.getElementById('pdf-viewer');
-            const noPdfMsg = document.getElementById('no-pdf-message');
-            
-            if (noPdfMsg) noPdfMsg.style.display = 'none';
-            
-            const url = URL.createObjectURL(chart.fileBlob);
-            viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(url)}`;
+            if (document.getElementById('no-pdf-message')) document.getElementById('no-pdf-message').style.display = 'none';
+            viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(URL.createObjectURL(chart.fileBlob))}`;
             viewer.style.display = 'block';
         };
-        
         chartsListContainer.appendChild(btn);
     });
 }
