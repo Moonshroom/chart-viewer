@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chart-viewer</title>
+    <link rel="stylesheet" href="style.css?v=2">
+<link rel="apple-touch-icon" sizes="180x180" href="./Favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./Favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./Favicon/favicon-16x16.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+<div id="update-popup" class="popup-overlay">
+    <div class="popup-content">
+        <!-- <h2>PDF Database Update</h2><br>
+        <p>On 25/06/2026, the PDF database was updated.</p><br> -->
+        <p><b>New features:</b> Added support for <b>Approach Chart Types</b>.</p><br>
+        <p>1.<b> New PDFs for cells:</b> <b>WH1</b> and <b>WH3</b> for SID/STAR.</p>
+        <p>2.<b> New PDFs for Approach Charting</b></p>
+        <p>3.<b> Rebuild Chart Type selector and Cells selector for better organization</b></p>
+        <p>4.<b> Add autoloads for databases</b></p>
+        </p><br>
+        <br>
+    
+        <!-- <p style="color: #d32f2f; font-weight: bold;"><b>CAUTION</b><br><p  style= "color: #ffd700;">Instructions: Please clear your cache data via button in upper-left corner and reload the PDFs using the "Select Root Folder" option.</p></p> -->
+        <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
+    </div>
+</div>
+    <div class="app-container">
+        <aside class="sidebar">
+            
+            <h2>⚙ Tools</h2>
+<button id="btn-refresh-data" class="primary-btn">
+    🔄 Refresh Data
+</button>
+  <div id="stats-display"></div>
+
+<div id="status-badge" class="hidden"></div>
+            
+            <div class="filter-group">
+                <label for="search-country">Filter by Country:</label>
+                <input type="text" id="search-country" placeholder="e.g. Poland, Germany">
+            </div>
+
+
+                <div class="filter-group">
+                <label>Filter by Cell:</label>
+                <div id="cell-buttons" class="button-grid">
+    </div>
+
+            </div>
+
+            <div class="filter-group">
+<label>Filter by Chart Type:</label>
+<div id="type-filter-container" class="filter-wrapper">
+    <div class="main-filters">
+    </div>
+    <div class="main-filters">        
+    </div>
+    
+    <div class="detailed-filters" id="detailed-filters">
+        </div>
+</div>
+            </div>
+<button id="btn-help" class="secondary-button" style="width:100%; margin-top:10px;">ℹ️ How to use</button>
+
+<div id="help-box" class="hidden" style="background:#202024; padding:15px; border-radius:6px; font-size:0.85rem; margin-top:10px; border:1px solid #007acc; color:#ddd;">
+    <h4 style="color:#007acc; margin-bottom:8px;">Quick Guide:</h4>
+    <ul style="padding-left: 20px; line-height: 1.6;">
+        <li><b>1. Filter:</b> Type at least 3 letters in <i>Filter Country</i> to search. You can also search by Cells and Chart Types.</li>
+        <li><b>2. Navigate:</b> Click on any item in the list to open the chart.</li>
+        <li><b>3. PDF Search:</b> Use <b>Ctrl + F</b> while the PDF is focused to find text inside the chart.</li>
+        <li><b>4. Years:</b> Use the dropdown at the top to switch between databases.</li>
+    </ul>
+</div>
+            
+<div id="stats-container" style="
+    padding: 10px;
+    font-size: 0.8rem;
+    color: #a8a8b3;
+    border-top: 1px solid #2d2d33;
+">
+<div id="footer-menu">
+    <div id="stats-container">
+        <div id="stats-charts">PDFs found: 0</div>
+        <div id="stats-cycles">DateBases found: 0</div>
+    </div>
+    <div id="build-info">Build 0.6 - SSCh & APPCh testing</div>
+</div>
+            
+        </aside>
+
+        <section class="airports-panel">
+           <div class="panel-header">
+    <div class="header-main">
+        <h3>Available PDFs:
+    <br><span id="chart-count" class="result-badge" style="font-size: 0.95rem; color: #888;">0 found</span></h3>
+        <select id="cycle-filter" class="panel-select" aria-label="Select year cycle" ></select>
+    </div>
+    
+</div>
+            
+            <div id="charts-list-container" class="airports-list"></div>
+        </section>
+
+       <section class="viewer-panel">
+    <div class="viewer-header">
+        <div class="warning-banner">
+    ⚠️ Those charts are not up to date, use it only as a reference for specification or notes.
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+</div>
+    </div>
+    <div class="viewer-content">
+        <div class="no-pdf" id="no-pdf-message">
+            <h3>No Chart Selected</h3>
+        </div>
+        <iframe id="pdf-viewer" title="PDF Viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
+    </div>
+</section>
+    </div>
+
+    <script src="app.js?v=2"></script>
+</body>
+</html>

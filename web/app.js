@@ -1,0 +1,280 @@
+// --- ZMIENNE GLOBALNE ---
+let chartDatabase = [];
+const chartTypesList = ["ABP", "SID", "AIRPORT", "STAR", "APP", "GNSS-ARRS", "NOISE", "RMAC"];
+let selectedTypes = new Set();
+let selectedCell = ""; 
+
+const groupDefinitions = {
+    "APPROACH": ["AIRPORT", "APP", "ABP"],
+    "SID/STAR": ["SID", "STAR", "GNSS-ARRS", "RMAC", "NOISE"]
+};
+const availableDatabases = ["2026"];
+
+// Elementy DOM
+const searchCountryInput = document.getElementById('search-country');
+const cycleFilterSelect = document.getElementById('cycle-filter');
+const chartsListContainer = document.getElementById('charts-list-container');
+const statusBadge = document.getElementById('status-badge');
+const btnHelp = document.getElementById('btn-help');
+const helpBox = document.getElementById('help-box');
+
+// --- INICJALIZACJA ---
+window.addEventListener('DOMContentLoaded', async () => {
+    initTypeFilter();
+    initCellFilter();
+    await initCycleSelect();
+});
+
+// --- Refresh Data Button ---
+document.getElementById('btn-refresh-data').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-refresh-data');
+    btn.textContent = "Loading all...";
+    btn.disabled = true;
+
+    console.log("[UI] Starting full database refresh...");
+
+    try {
+        for (const year of availableDatabases) {
+            console.log(`[Network] Loading database: database${year}.json`);
+            await loadChartsForYear(year);
+        }
+        
+        console.log("[Success] All databases refreshed.");
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+    } catch (err) {
+        console.error("[Error] Failed to reload databases:", err);
+        alert("Error: Failed to refresh data. Check console for details.");
+    } finally {
+        btn.textContent = "🔄 Refresh Data";
+        btn.disabled = false;
+    }
+});
+
+// --- LOGIKA ŁADOWANIA ---
+async function initCycleSelect() {
+    const years = ["2026"].sort((a, b) => b.localeCompare(a));
+    cycleFilterSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+    cycleFilterSelect.addEventListener('change', () => loadChartsForYear(cycleFilterSelect.value));
+    await loadChartsForYear(years[0]);
+}
+
+
+async function loadChartsForYear(year) {
+    const statsDisplay = document.getElementById('stats-display');
+    const btn = document.getElementById('btn-refresh-data');
+
+    if (btn) btn.textContent = "Loading...";
+    statsDisplay.innerHTML = "<em>Updating...</em>";
+
+    try {
+        const response = await fetch(`./database${year}.json`);
+        
+        if (!response.ok) throw new Error("Network error");
+        
+        chartDatabase = await response.json();
+        updateFooterStats();
+        updateChartList();
+        
+        statsDisplay.innerHTML = `
+            <div style="color: #4add87;">
+                <strong>✔ Database loaded.</strong>
+            </div>
+        `;
+    } catch (err) {
+        statsDisplay.innerHTML = `
+            <div style="color: #fb7185;">
+                <strong>❌ Error: Update failed</strong>
+            </div>
+        `;
+    } finally {
+        if (btn) btn.textContent = "🔄 Refresh Data";
+    }
+}
+
+// --- FILTRY ---
+function initTypeFilter() {
+    const mainContainer = document.querySelector('.main-filters');
+    const detailedContainer = document.getElementById('detailed-filters');
+    
+    mainContainer.innerHTML = '';
+    detailedContainer.innerHTML = '';
+
+    // All types
+    const allBtn = document.createElement('button');
+    allBtn.textContent = "All types";
+    allBtn.className = 'filter-btn type-btn active';
+    allBtn.id = 'btn-ALL';
+    allBtn.onclick = () => {
+        selectedTypes.clear();
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+        updateChartList();
+    };
+    mainContainer.appendChild(allBtn);
+
+// (APPROACH, SID/STAR)
+    const groups = { 
+        "APPROACH": ["AIRPORT", "APP", "ABP"], 
+        "SID/STAR": ["SID", "STAR", "GNSS-ARRS", "RMAC", "NOISE"] 
+    };
+
+    Object.keys(groups).forEach(groupName => {
+        const btn = document.createElement('button');
+        btn.textContent = groupName;
+        btn.className = 'filter-btn type-btn';
+        btn.onclick = () => {
+            selectedTypes.clear();
+            groups[groupName].forEach(t => selectedTypes.add(t));
+            
+            document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Podświetl też szczegółowe typy w tej grupie
+            groups[groupName].forEach(t => {
+                document.getElementById(`btn-${t}`)?.classList.add('active');
+            });
+            updateChartList();
+        };
+        mainContainer.appendChild(btn);
+    });
+
+    chartTypesList.forEach(type => {
+        const btn = document.createElement('button');
+        btn.textContent = type;
+        btn.className = 'filter-btn type-btn';
+        btn.id = `btn-${type}`;
+        btn.onclick = () => toggleType(type);
+        detailedContainer.appendChild(btn);
+    });
+}
+
+function initCellFilter() {
+    const container = document.getElementById('cell-buttons');
+    if (!container) return;
+    container.innerHTML = '';
+
+    ["ALL", "EH1", "EH2", "WH1", "WH2", "WH3"].forEach(cell => {
+        const btn = document.createElement('button');
+        const cellValue = cell === "ALL" ? "" : cell;
+        
+        btn.textContent = cell;
+        btn.className = `filter-btn cell-btn ${selectedCell === cellValue ? "active" : ""}`;
+        
+        btn.onclick = () => {
+            selectedCell = cellValue;
+            document.querySelectorAll('.cell-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateChartList();
+        };
+        container.appendChild(btn);
+    });
+}
+
+function toggleType(type) {
+    document.getElementById('btn-ALL')?.classList.remove('active');
+    
+    if (selectedTypes.has(type)) {
+        selectedTypes.delete(type);
+        document.getElementById(`btn-${type}`)?.classList.remove('active');
+    } else {
+        selectedTypes.add(type);
+        document.getElementById(`btn-${type}`)?.classList.add('active');
+    }
+    
+    if (selectedTypes.size === 0) {
+        document.getElementById('btn-ALL')?.classList.add('active');
+    }
+    
+    updateChartList();
+}
+
+// --- LISTA ---
+
+function updateChartList() {
+    chartsListContainer.innerHTML = '';
+    
+    const filtered = chartDatabase.filter(i => 
+        (i.country || "").toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
+        (selectedTypes.size === 0 || selectedTypes.has(i["chart-type"])) &&
+        (selectedCell === "" || i.folder === selectedCell)
+    );
+
+    updateTypeUI();
+
+filtered.forEach(chart => {
+    const typeClass = `type-${chart["chart-type"].toLowerCase().replace('/', '-')}`;
+    const fileNameWithoutExt = chart.path.split('/').pop().replace(/\.[^/.]+$/, "");
+    const parts = fileNameWithoutExt.split('_');
+    const cycle = parts.length >= 3 ? parts[2] : ""; 
+
+    const btn = document.createElement('button');
+    btn.className = 'airport-item';
+    btn.innerHTML = `
+        <div class="country-title">${chart.country}</div>
+        <div class="chart-details-row">
+            <span class="chart-type ${typeClass}">${chart["chart-type"]}</span>
+            <span class="chart-folder">📁 ${chart.folder}</span>
+            ${cycle ? `<span class="chart-cycle">📅 ${cycle}</span>` : ''}
+        </div>`;
+    
+    btn.onclick = () => {
+        document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        const viewer = document.getElementById('pdf-viewer');
+        viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(`../../../${chart.path}`)}`;
+        viewer.style.display = 'block';
+    };
+    chartsListContainer.appendChild(btn);
+});
+
+    const countDisplay = document.getElementById('chart-count');
+    if (countDisplay) countDisplay.textContent = `${filtered.length} found`;
+}
+
+function updateTypeUI() {
+    const groups = { 
+        "APPROACH": ["AIRPORT", "APP", "ABP"], 
+        "SID/STAR": ["SID", "STAR", "GNSS-ARRS", "RMAC", "NOISE"] 
+    };
+
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+
+    const isAllSelected = (selectedTypes.size === 0 || selectedTypes.size === chartTypesList.length);
+
+    if (isAllSelected) {
+        document.getElementById('btn-ALL')?.classList.add('active');
+        document.querySelectorAll('.type-btn').forEach(b => b.classList.add('active'));
+    } else {
+        selectedTypes.forEach(t => {
+            document.getElementById(`btn-${t}`)?.classList.add('active');
+        });
+
+        Object.keys(groups).forEach(groupName => {
+            const groupTypes = groups[groupName];
+            const isGroupActive = groupTypes.every(t => selectedTypes.has(t));
+            
+            if (isGroupActive) {
+                const groupBtn = Array.from(document.querySelectorAll('.type-btn'))
+                                      .find(b => b.textContent === groupName);
+                groupBtn?.classList.add('active');
+            }
+        });
+    }
+}
+
+function updateFooterStats() {
+    const statsCharts = document.getElementById('stats-charts');
+    const statsCycles = document.getElementById('stats-cycles');
+    
+    if (statsCharts) {
+        statsCharts.textContent = `PDFs found: ${chartDatabase.length}`;
+    }
+    
+    if (statsCycles) {
+        statsCycles.textContent = `DateBases found: ${availableDatabases.length}`;
+    }
+}
+
+searchCountryInput.addEventListener('input', updateChartList);
+btnHelp.addEventListener('click', () => helpBox.classList.toggle('hidden'));
