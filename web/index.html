@@ -11,19 +11,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
+    <nav class="top-nav">
+    <img src="favicon/favicon-16x16.png" alt="Logo" class="nav-logo">
+    <div class="nav-brand">Chart Viewer</div>
+    <button class="nav-tab active" onclick="showTab('note-searcher')">Note Searcher</button>
+    </nav>
+
+<div id="note-searcher" class="tab-content active">
+    </div>
 <div id="update-popup" class="popup-overlay">
     <div class="popup-content">
-        <!-- <h2>PDF Database Update</h2><br>
-        <p>On 25/06/2026, the PDF database was updated.</p><br> -->
-        <p><b>New features:</b> Added support for <b>Approach Chart Types</b>.</p><br>
-        <p>1.<b> New PDFs for cells:</b> <b>WH1</b> and <b>WH3</b> for SID/STAR.</p>
-        <p>2.<b> New PDFs for Approach Charting</b></p>
-        <p>3.<b> Rebuild Chart Type selector and Cells selector for better organization</b></p>
-        <p>4.<b> Add autoloads for databases</b></p>
-        </p><br>
-        <br>
-    
-        <!-- <p style="color: #d32f2f; font-weight: bold;"><b>CAUTION</b><br><p  style= "color: #ffd700;">Instructions: Please clear your cache data via button in upper-left corner and reload the PDFs using the "Select Root Folder" option.</p></p> -->
+        <h3>Build v0.65</h3>
+        <ul class="changelog-list">
+            <li>Added support for <b>Approach Chart Types</b>.</li>
+            <li>New PDFs: <b>All SID/STAR</b> and <b>EH1 Approach</b> charts with full OCR.</li>
+            <li>Rebuilt Chart Type & Cell selectors.</li>
+            <li>Implemented database auto-loading.</li>
+        </ul>
         <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
     </div>
 </div>
@@ -32,7 +36,7 @@
             
             <h2>⚙ Tools</h2>
 <button id="btn-refresh-data" class="primary-btn">
-    🔄 Refresh Data
+    Refresh Data
 </button>
   <div id="stats-display"></div>
 
@@ -86,7 +90,7 @@
         <div id="stats-charts">PDFs found: 0</div>
         <div id="stats-cycles">DateBases found: 0</div>
     </div>
-    <div id="build-info">Build 0.6 - SSCh & APPCh testing</div>
+    <div id="build-info">Build 0.65 - SSCh & APPCh testing</div>
 </div>
             
         </aside>
@@ -108,12 +112,12 @@
     <div class="viewer-header">
         <div class="warning-banner">
     ⚠️ Those charts are not up to date, use it only as a reference for specification or notes.
-    <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+    <!-- <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button> -->
 </div>
     </div>
     <div class="viewer-content">
         <div class="no-pdf" id="no-pdf-message">
-            <h3>No Chart Selected</h3>
+            <!-- <h3>No Chart Selected</h3> -->
         </div>
         <iframe id="pdf-viewer" title="PDF Viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
     </div>

@@ -46,7 +46,7 @@ document.getElementById('btn-refresh-data').addEventListener('click', async () =
         console.error("[Error] Failed to reload databases:", err);
         alert("Error: Failed to refresh data. Check console for details.");
     } finally {
-        btn.textContent = "🔄 Refresh Data";
+        btn.textContent = " Refresh Data ";
         btn.disabled = false;
     }
 });
@@ -78,20 +78,33 @@ async function loadChartsForYear(year) {
         
         statsDisplay.innerHTML = `
             <div style="color: #4add87;">
-                <strong>✔ Database loaded.</strong>
+                <strong> ✔ Database successfully loaded. </strong>
             </div>
         `;
     } catch (err) {
         statsDisplay.innerHTML = `
             <div style="color: #fb7185;">
-                <strong>❌ Error: Update failed</strong>
+                <strong>❌ Error: Update failed.</strong>
             </div>
         `;
     } finally {
-        if (btn) btn.textContent = "🔄 Refresh Data";
+        if (btn) btn.textContent = "Refresh Data";
     }
 }
 
+
+function showTab(tabId) {
+    // Ukryj wszystkie taby
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    // Odznacz wszystkie przyciski
+    document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+    
+    // Pokaż wybrany tab
+    document.getElementById(tabId).classList.add('active');
+    
+    // Znajdź przycisk, który wywołał funkcję i aktywuj go
+    event.currentTarget.classList.add('active');
+}
 // --- FILTRY ---
 function initTypeFilter() {
     const mainContainer = document.querySelector('.main-filters');
@@ -130,7 +143,6 @@ function initTypeFilter() {
             document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            // Podświetl też szczegółowe typy w tej grupie
             groups[groupName].forEach(t => {
                 document.getElementById(`btn-${t}`)?.classList.add('active');
             });
@@ -227,6 +239,11 @@ filtered.forEach(chart => {
     };
     chartsListContainer.appendChild(btn);
 });
+const items = document.querySelectorAll('.airport-item');
+if (items.length > 0) {
+    // Automatycznie klikamy w pierwszy element listy
+    items[0].click();
+}
 
     const countDisplay = document.getElementById('chart-count');
     if (countDisplay) countDisplay.textContent = `${filtered.length} found`;
@@ -238,18 +255,22 @@ function updateTypeUI() {
         "SID/STAR": ["SID", "STAR", "GNSS-ARRS", "RMAC", "NOISE"] 
     };
 
+    // 1. Reset wszystkich
     document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
 
     const isAllSelected = (selectedTypes.size === 0 || selectedTypes.size === chartTypesList.length);
 
     if (isAllSelected) {
+        // Jeśli "ALL", tylko przycisk ALL jest aktywny
         document.getElementById('btn-ALL')?.classList.add('active');
-        document.querySelectorAll('.type-btn').forEach(b => b.classList.add('active'));
+        // Reszta pozostaje bez klasy 'active' (czyli szara)
     } else {
+        // 2. Jeśli nie "ALL", aktywujemy wybrane typy
         selectedTypes.forEach(t => {
             document.getElementById(`btn-${t}`)?.classList.add('active');
         });
 
+        // 3. Sprawdzamy grupy (jeśli wszystkie z grupy są wybrane, grupa też się podświetla)
         Object.keys(groups).forEach(groupName => {
             const groupTypes = groups[groupName];
             const isGroupActive = groupTypes.every(t => selectedTypes.has(t));
