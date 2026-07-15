@@ -53,14 +53,11 @@ document.getElementById('btn-refresh-data').addEventListener('click', async () =
 
 // --- LOGIKA ŁADOWANIA ---
 
-// Zmienna do przechowywania timera
 let searchTimeout;
 
 document.getElementById('global-search').addEventListener('input', () => {
-    // 1. Czyścimy poprzedni licznik czasu
     clearTimeout(searchTimeout);
     
-    // 2. Ustawiamy nowy licznik (np. 400ms)
     searchTimeout = setTimeout(() => {
         updateChartList();
     }, 400); 
@@ -108,15 +105,11 @@ async function loadChartsForYear(year) {
 
 
 function showTab(tabId) {
-    // Ukryj wszystkie taby
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    // Odznacz wszystkie przyciski
     document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
     
-    // Pokaż wybrany tab
     document.getElementById(tabId).classList.add('active');
-    
-    // Znajdź przycisk, który wywołał funkcję i aktywuj go
+
     event.currentTarget.classList.add('active');
 }
 // --- FILTRY ---
@@ -220,16 +213,13 @@ function toggleType(type) {
 function updateChartList() {
     chartsListContainer.innerHTML = '';
     
-    // 1. Pobierz szukaną frazę
     const noteSearchTerm = document.getElementById('global-search').value.toLowerCase();
     
-    // 2. Filtruj bazę danych
     const filtered = chartDatabase.filter(chart => {
         const matchesFilters = (chart.country || "").toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
                                (selectedTypes.size === 0 || selectedTypes.has(chart["chart-type"])) &&
                                (selectedCell === "" || chart.folder === selectedCell);
         
-        // Sprawdź czy fraza znajduje się w którejkolwiek stronie (text_snippet)
         const matchesNote = noteSearchTerm === "" || 
                             (chart.pages && chart.pages.some(p => 
                                 p.text_snippet.toLowerCase().includes(noteSearchTerm)
@@ -242,7 +232,6 @@ function updateChartList() {
 
     filtered.forEach(chart => {
         const typeClass = `type-${chart["chart-type"].toLowerCase().replace('/', '-')}`;
-        // fileNameWithoutExt używa pola 'name', które już masz w nowym JSON
         const fileNameWithoutExt = chart.name.replace(/\.[^/.]+$/, "");
         const parts = fileNameWithoutExt.split('_');
         const cycle = parts.length >= 3 ? parts[2] : ""; 
@@ -268,17 +257,14 @@ btn.onclick = () => {
     
     const viewer = document.getElementById('pdf-viewer');
     
-    // Budujemy URL
     viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(`../../../${chart.path}`)}#page=${pageNum}&scrollmode=vertical`;
     
-    // Czekamy na pełne załadowanie iframe
 viewer.onload = () => {
     if (noteSearchTerm) {
-        // Czekamy 1.5 sekundy, aby upewnić się, że cały PDF i UI są załadowane
         setTimeout(() => {
             viewer.contentWindow.postMessage({
                 type: 'find',
-                query: noteSearchTerm // Przesyłamy całą frazę
+                query: noteSearchTerm 
             }, '*');
         }, 1500); 
     }
@@ -301,22 +287,19 @@ function updateTypeUI() {
         "SID/STAR": ["SID", "STAR", "GNSS-ARRS", "RMAC", "NOISE"] 
     };
 
-    // 1. Reset wszystkich
     document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
 
     const isAllSelected = (selectedTypes.size === 0 || selectedTypes.size === chartTypesList.length);
 
     if (isAllSelected) {
-        // Jeśli "ALL", tylko przycisk ALL jest aktywny
         document.getElementById('btn-ALL')?.classList.add('active');
-        // Reszta pozostaje bez klasy 'active' (czyli szara)
     } else {
-        // 2. Jeśli nie "ALL", aktywujemy wybrane typy
+
         selectedTypes.forEach(t => {
             document.getElementById(`btn-${t}`)?.classList.add('active');
         });
 
-        // 3. Sprawdzamy grupy (jeśli wszystkie z grupy są wybrane, grupa też się podświetla)
+
         Object.keys(groups).forEach(groupName => {
             const groupTypes = groups[groupName];
             const isGroupActive = groupTypes.every(t => selectedTypes.has(t));

@@ -49,13 +49,12 @@ body {
 }
 
 .tab-content.active {
-    display: block; /* Pokazujemy tylko aktywny tab */
+    display: block; 
 }
 
 .app-container {
   display: flex;
   height: 100vh;
-  /* to zmienic aby dopasdowac container */
   width: 100vw;
 }
 
@@ -284,11 +283,11 @@ background: #25252a;
 .warning-banner {
     max-width: 1000px;
     margin: 10px auto;
-    background-color: #333333; /* Ciemne tło jak na obrazku */
-    color: #ffd700;           /* Żółty kolor tekstu */
+    background-color: #333333; 
+    color: #ffd700; 
     padding: 15px;
     border-radius: 8px;
-    border-left: 5px solid #ff4757; /* Czerwony akcent z boku */
+    border-left: 5px solid #ff4757; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 /* .warning-banner .close-btn {
@@ -363,14 +362,14 @@ position: absolute;
 }
 
 #pdf-viewer {
-    position: absolute; /* PDF musi "leżeć" na wierzchu */
+    position: absolute; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     transition: opacity 0.3s ease;
     z-index: 2;
-    background: #1a1a1a; /* Ważne: PDF musi mieć tło, inaczej będzie prześwitywać */
+    background: #1a1a1a; 
 }
 #no-pdf-message {
     position: absolute;
@@ -406,7 +405,6 @@ position: absolute;
     background: #1a1a1a;
 }
 
-/* Teksty wewnątrz */
 .country-title {
     color: #e1e1e6;
     font-weight: bold;
@@ -427,14 +425,14 @@ position: absolute;
 
 
 .type-btn {
-    background-color: #333; /* Ciemny szary */
-    color: #888;           /* Szary tekst */
+    background-color: #333; 
+    color: #888; 
     transition: all 0.3s ease;
 }
 
 
 .type-btn.active {
-    background-color: #007bff; /* Twój niebieski */
+    background-color: #007bff; 
     color: white;
 }
 
@@ -485,11 +483,11 @@ position: absolute;
 .chart-details-row {
     display: flex;
     align-items: center;
-    gap: 10px; /* Odstęp między elementami */
+    gap: 10px; 
     margin-top: 4px;
 }
 
-/* Opcjonalnie: upewnij się, że tekst się nie łamie */
+
 .chart-type, .chart-folder, .chart-cycle {
     white-space: nowrap;
 }
@@ -586,11 +584,11 @@ position: absolute;
 }
 
 .popup-content {
-    background: #1e1e1e; /* Ciemne tło */
+    background: #1e1e1e; 
     color: white;
     padding: 25px;
     border-radius: 8px;
-    border-left: 5px solid #2ecc71; /* Zielona ramka po lewej */
+    border-left: 5px solid #2ecc71; 
     max-width: 500px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
@@ -651,15 +649,15 @@ position: absolute;
     width: 100%;
     box-sizing: border-box;
     
-    /* Kluczowe ustawienia dla "dwóch linijek" */
-    height: 100px; /* Stała wysokość na ok. 2 linie */
-    resize: none; /* Wyłącza możliwość rozciągania przez użytkownika */
+
+    height: 100px; 
+    resize: none; 
     line-height: 1.4;
     font-family: inherit;
 }
 
 #global-search:focus {
     outline: none;
-    border-color: #007bff; /* Podświetlenie przy kliknięciu */
+    border-color: #007bff; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
