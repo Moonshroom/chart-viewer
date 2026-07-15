@@ -4,28 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chart-viewer</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=5">
 <link rel="apple-touch-icon" sizes="180x180" href="./Favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./Favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./Favicon/favicon-16x16.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-    <nav class="top-nav">
-    <img src="favicon/favicon-16x16.png" alt="Logo" class="nav-logo">
-    <div class="nav-brand">Chart Viewer</div>
-    <button class="nav-tab active" onclick="showTab('note-searcher')">Note Searcher</button>
-    </nav>
+    <!-- <nav class="top-nav">
+        <img src="favicon/favicon-16x16.png" alt="Logo" class="nav-logo">
+        <div class="nav-brand">Chart Viewer</div>
+        <button class="nav-tab active" onclick="showTab('note-searcher')">Note Finder</button>
+        <button class="nav-tab" onclick="showTab('airport-info')">WebAIC</button>
+    </nav> -->
 
 <div id="note-searcher" class="tab-content active">
-    </div>
+  
 <div id="update-popup" class="popup-overlay">
     <div class="popup-content">
-        <h3>Build v0.65</h3>
+        <h3>Build v1.5</h3>
         <ul class="changelog-list">
-            <li>Added support for <b>Approach Chart Types</b>.</li>
-            <li>New PDFs: <b>All SID/STAR</b> and <b>EH1 Approach</b> charts with full OCR.</li>
+            <li>Added support for <b> Approach Charts</b>.</li>
+            <li>Rebuild <b> highlighting</b> system.</li>
+            <li>New PDFs: <b>All SID/STAR</b> and <b>All Approach</b> charts with full OCR.</li>
             <li>Rebuilt Chart Type & Cell selectors.</li>
+            <li>New feature: Global Note Search.</li>
             <li>Implemented database auto-loading.</li>
         </ul>
         <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
@@ -67,16 +70,10 @@
         </div>
 </div>
             </div>
-<button id="btn-help" class="secondary-button" style="width:100%; margin-top:10px;">ℹ️ How to use</button>
-
-<div id="help-box" class="hidden" style="background:#202024; padding:15px; border-radius:6px; font-size:0.85rem; margin-top:10px; border:1px solid #007acc; color:#ddd;">
-    <h4 style="color:#007acc; margin-bottom:8px;">Quick Guide:</h4>
-    <ul style="padding-left: 20px; line-height: 1.6;">
-        <li><b>1. Filter:</b> Type at least 3 letters in <i>Filter Country</i> to search. You can also search by Cells and Chart Types.</li>
-        <li><b>2. Navigate:</b> Click on any item in the list to open the chart.</li>
-        <li><b>3. PDF Search:</b> Use <b>Ctrl + F</b> while the PDF is focused to find text inside the chart.</li>
-        <li><b>4. Years:</b> Use the dropdown at the top to switch between databases.</li>
-    </ul>
+<div class="filter-group">
+    <label>GLOBAL NOTE SEARCH:</label>
+    <!-- Zmieniamy input na textarea, dodajemy atrybut rows -->
+    <textarea id="global-search" placeholder="Search in OCR text fiiles...." rows="2"></textarea>
 </div>
             
 <div id="stats-container" style="
@@ -90,7 +87,7 @@
         <div id="stats-charts">PDFs found: 0</div>
         <div id="stats-cycles">DateBases found: 0</div>
     </div>
-    <div id="build-info">Build 0.65 - SSCh & APPCh testing</div>
+    <div id="build-info">Build 1.5 - SSCh & APPCh full database</div>
 </div>
             
         </aside>
@@ -116,14 +113,22 @@
 </div>
     </div>
     <div class="viewer-content">
-        <div class="no-pdf" id="no-pdf-message">
-            <!-- <h3>No Chart Selected</h3> -->
-        </div>
+
         <iframe id="pdf-viewer" title="PDF Viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
+            <div class="no-pdf" id="no-pdf-message">
+            <h3>No Charts Selected</h3>
+        </div>
     </div>
 </section>
     </div>
-
-    <script src="app.js?v=2"></script>
+  </div>
+  <div id="second-tool" class="tab-content">
+    <div style="padding: 20px; color: white;">
+        <h2>Drugie narzędzie</h2>
+        <p>null</p>
+    </div>
+</div>
+    <script src="app.js?v=5"></script>
+    <script src="aptinfo.js?v=1"></script>
 </body>
 </html>

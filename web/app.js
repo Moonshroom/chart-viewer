@@ -52,6 +52,20 @@ document.getElementById('btn-refresh-data').addEventListener('click', async () =
 });
 
 // --- LOGIKA ŁADOWANIA ---
+
+// Zmienna do przechowywania timera
+let searchTimeout;
+
+document.getElementById('global-search').addEventListener('input', () => {
+    // 1. Czyścimy poprzedni licznik czasu
+    clearTimeout(searchTimeout);
+    
+    // 2. Ustawiamy nowy licznik (np. 400ms)
+    searchTimeout = setTimeout(() => {
+        updateChartList();
+    }, 400); 
+});
+
 async function initCycleSelect() {
     const years = ["2026"].sort((a, b) => b.localeCompare(a));
     cycleFilterSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
@@ -68,7 +82,7 @@ async function loadChartsForYear(year) {
     statsDisplay.innerHTML = "<em>Updating...</em>";
 
     try {
-        const response = await fetch(`./database${year}.json`);
+        const response = await fetch(`./database_${year}.json`);
         
         if (!response.ok) throw new Error("Network error");
         
@@ -206,44 +220,76 @@ function toggleType(type) {
 function updateChartList() {
     chartsListContainer.innerHTML = '';
     
-    const filtered = chartDatabase.filter(i => 
-        (i.country || "").toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
-        (selectedTypes.size === 0 || selectedTypes.has(i["chart-type"])) &&
-        (selectedCell === "" || i.folder === selectedCell)
-    );
+    // 1. Pobierz szukaną frazę
+    const noteSearchTerm = document.getElementById('global-search').value.toLowerCase();
+    
+    // 2. Filtruj bazę danych
+    const filtered = chartDatabase.filter(chart => {
+        const matchesFilters = (chart.country || "").toUpperCase().includes(searchCountryInput.value.toUpperCase()) &&
+                               (selectedTypes.size === 0 || selectedTypes.has(chart["chart-type"])) &&
+                               (selectedCell === "" || chart.folder === selectedCell);
+        
+        // Sprawdź czy fraza znajduje się w którejkolwiek stronie (text_snippet)
+        const matchesNote = noteSearchTerm === "" || 
+                            (chart.pages && chart.pages.some(p => 
+                                p.text_snippet.toLowerCase().includes(noteSearchTerm)
+                            ));
+        
+        return matchesFilters && matchesNote;
+    });
 
     updateTypeUI();
 
-filtered.forEach(chart => {
-    const typeClass = `type-${chart["chart-type"].toLowerCase().replace('/', '-')}`;
-    const fileNameWithoutExt = chart.path.split('/').pop().replace(/\.[^/.]+$/, "");
-    const parts = fileNameWithoutExt.split('_');
-    const cycle = parts.length >= 3 ? parts[2] : ""; 
+    filtered.forEach(chart => {
+        const typeClass = `type-${chart["chart-type"].toLowerCase().replace('/', '-')}`;
+        // fileNameWithoutExt używa pola 'name', które już masz w nowym JSON
+        const fileNameWithoutExt = chart.name.replace(/\.[^/.]+$/, "");
+        const parts = fileNameWithoutExt.split('_');
+        const cycle = parts.length >= 3 ? parts[2] : ""; 
 
-    const btn = document.createElement('button');
-    btn.className = 'airport-item';
-    btn.innerHTML = `
-        <div class="country-title">${chart.country}</div>
-        <div class="chart-details-row">
-            <span class="chart-type ${typeClass}">${chart["chart-type"]}</span>
-            <span class="chart-folder">📁 ${chart.folder}</span>
-            ${cycle ? `<span class="chart-cycle">📅 ${cycle}</span>` : ''}
-        </div>`;
+        const btn = document.createElement('button');
+        btn.className = 'airport-item';
+        btn.innerHTML = `
+            <div class="country-title">${chart.country}</div>
+            <div class="chart-details-row">
+                <span class="chart-type ${typeClass}">${chart["chart-type"]}</span>
+                <span class="chart-folder">📁 ${chart.folder}</span>
+                ${cycle ? `<span class="chart-cycle">📅 ${cycle}</span>` : ''}
+            </div>`;
+        
+btn.onclick = () => {
+    document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
+    btn.classList.add('active');
     
-    btn.onclick = () => {
-        document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
-        btn.classList.add('active');
-        const viewer = document.getElementById('pdf-viewer');
-        viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(`../../../${chart.path}`)}`;
-        viewer.style.display = 'block';
-    };
-    chartsListContainer.appendChild(btn);
-});
-const items = document.querySelectorAll('.airport-item');
-if (items.length > 0) {
-    // Automatycznie klikamy w pierwszy element listy
-    items[0].click();
-}
+    const foundPageObj = chart.pages && chart.pages.find(p => 
+        p.text_snippet.toLowerCase().includes(noteSearchTerm.toLowerCase())
+    );
+    const pageNum = foundPageObj ? foundPageObj.page_number : 1;
+    
+    const viewer = document.getElementById('pdf-viewer');
+    
+    // Budujemy URL
+    viewer.src = `./pdfjs/web/viewer.html?file=${encodeURIComponent(`../../../${chart.path}`)}#page=${pageNum}&scrollmode=vertical`;
+    
+    // Czekamy na pełne załadowanie iframe
+viewer.onload = () => {
+    if (noteSearchTerm) {
+        // Czekamy 1.5 sekundy, aby upewnić się, że cały PDF i UI są załadowane
+        setTimeout(() => {
+            viewer.contentWindow.postMessage({
+                type: 'find',
+                query: noteSearchTerm // Przesyłamy całą frazę
+            }, '*');
+        }, 1500); 
+    }
+};
+    
+    viewer.style.display = 'block';
+};
+        chartsListContainer.appendChild(btn);
+    });
+
+    const items = document.querySelectorAll('.airport-item');
 
     const countDisplay = document.getElementById('chart-count');
     if (countDisplay) countDisplay.textContent = `${filtered.length} found`;

@@ -19673,6 +19673,30 @@ const PDFViewerApplication = {
     }), {
       signal
     });
+window.addEventListener("message", (event) => {
+    if (event.data.type === 'find') {
+        // 1. Otwórz pasek wyszukiwania (wywołaj natywną funkcję)
+        if (window.PDFViewerApplication && PDFViewerApplication.findBar) {
+            PDFViewerApplication.findBar.open();
+        } else {
+            // Jeśli obiekt PDFViewerApplication jest niedostępny, kliknij w przycisk lupki
+            const findButton = document.getElementById('viewFind');
+            if (findButton) findButton.click();
+        }
+
+        // 2. Wpisz tekst i wyszukaj (z opóźnieniem, aby zdążył się otworzyć)
+        setTimeout(() => {
+            const findInput = document.getElementById('findInput');
+            if (findInput) {
+                findInput.value = event.data.query;
+                findInput.dispatchEvent(new Event('input', { bubbles: true }));
+                
+                const findNext = document.getElementById('findNext');
+                if (findNext) findNext.click();
+            }
+        }, 300);
+    }
+});
     window.addEventListener("updatefromsandbox", evt => {
       eventBus.dispatch("updatefromsandbox", {
         source: window,

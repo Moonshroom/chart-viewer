@@ -674,7 +674,7 @@
 
   .highlight{
     --highlight-bg-color:rgb(180 0 170 / 0.25);
-    --highlight-selected-bg-color:rgb(0 100 0 / 0.25);
+    --highlight-selected-bg-color:rgba(33, 190, 12, 0.568);
     --highlight-backdrop-filter:none;
     --highlight-selected-backdrop-filter:none;
 
