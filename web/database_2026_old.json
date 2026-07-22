@@ -1,0 +1,306 @@
+[
+    {
+        "name": "Finland_NOISE_2606.pdf",
+        "path": "data/2026/EH1/Finland_NOISE_2606.pdf",
+        "folder": "EH1",
+        "country": "Finland",
+        "chart-type": "NOISE",
+        "cycle": "2606"
+    },
+    {
+        "name": "Finland_RADAR_2606.pdf",
+        "path": "data/2026/EH1/Finland_RADAR_2606.pdf",
+        "folder": "EH1",
+        "country": "Finland",
+        "chart-type": "RADAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Finland_SID_2606.pdf",
+        "path": "data/2026/EH1/Finland_SID_2606.pdf",
+        "folder": "EH1",
+        "country": "Finland",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Finland_STAR_2606.pdf",
+        "path": "data/2026/EH1/Finland_STAR_2606.pdf",
+        "folder": "EH1",
+        "country": "Finland",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Poland_RADAR_2606.pdf",
+        "path": "data/2026/EH1/Poland_RADAR_2606.pdf",
+        "folder": "EH1",
+        "country": "Poland",
+        "chart-type": "RADAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Poland_SID_2606.pdf",
+        "path": "data/2026/EH1/Poland_SID_2606.pdf",
+        "folder": "EH1",
+        "country": "Poland",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Poland_STAR_2606.pdf",
+        "path": "data/2026/EH1/Poland_STAR_2606.pdf",
+        "folder": "EH1",
+        "country": "Poland",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Emirates_ABP_2606.pdf",
+        "path": "data/2026/EH2/Emirates_ABP_2606.pdf",
+        "folder": "EH2",
+        "country": "Emirates",
+        "chart-type": "ABP",
+        "cycle": "2606"
+    },
+    {
+        "name": "Emirates_SID_2606.pdf",
+        "path": "data/2026/EH2/Emirates_SID_2606.pdf",
+        "folder": "EH2",
+        "country": "Emirates",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Emirates_STAR_2606.pdf",
+        "path": "data/2026/EH2/Emirates_STAR_2606.pdf",
+        "folder": "EH2",
+        "country": "Emirates",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Turkie_NOISE_2606.pdf",
+        "path": "data/2026/EH2/Turkie_NOISE_2606.pdf",
+        "folder": "EH2",
+        "country": "Turkie",
+        "chart-type": "NOISE",
+        "cycle": "2606"
+    },
+    {
+        "name": "Turkie_RADAR_2606.pdf",
+        "path": "data/2026/EH2/Turkie_RADAR_2606.pdf",
+        "folder": "EH2",
+        "country": "Turkie",
+        "chart-type": "RADAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Turkie_SID_2606.pdf",
+        "path": "data/2026/EH2/Turkie_SID_2606.pdf",
+        "folder": "EH2",
+        "country": "Turkie",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Turkie_STAR_2606.pdf",
+        "path": "data/2026/EH2/Turkie_STAR_2606.pdf",
+        "folder": "EH2",
+        "country": "Turkie",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Brazil_RMAC_2606.pdf",
+        "path": "data/2026/WH1/Brazil_RMAC_2606.pdf",
+        "folder": "WH1",
+        "country": "Brazil",
+        "chart-type": "RMAC",
+        "cycle": "2606"
+    },
+    {
+        "name": "Brazil_SID_2606.pdf",
+        "path": "data/2026/WH1/Brazil_SID_2606.pdf",
+        "folder": "WH1",
+        "country": "Brazil",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Brazil_STAR_2606.pdf",
+        "path": "data/2026/WH1/Brazil_STAR_2606.pdf",
+        "folder": "WH1",
+        "country": "Brazil",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Cuba_NOISE_2606.pdf",
+        "path": "data/2026/WH1/Cuba_NOISE_2606.pdf",
+        "folder": "WH1",
+        "country": "Cuba",
+        "chart-type": "NOISE",
+        "cycle": "2606"
+    },
+    {
+        "name": "Cuba_RMAC_2606.pdf",
+        "path": "data/2026/WH1/Cuba_RMAC_2606.pdf",
+        "folder": "WH1",
+        "country": "Cuba",
+        "chart-type": "RMAC",
+        "cycle": "2606"
+    },
+    {
+        "name": "Cuba_SID_2606.pdf",
+        "path": "data/2026/WH1/Cuba_SID_2606.pdf",
+        "folder": "WH1",
+        "country": "Cuba",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Cuba_STAR_2606.pdf",
+        "path": "data/2026/WH1/Cuba_STAR_2606.pdf",
+        "folder": "WH1",
+        "country": "Cuba",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Australia_ABP_2606.pdf",
+        "path": "data/2026/WH2/Australia_ABP_2606.pdf",
+        "folder": "WH2",
+        "country": "Australia",
+        "chart-type": "ABP",
+        "cycle": "2606"
+    },
+    {
+        "name": "Australia_SID_2606.pdf",
+        "path": "data/2026/WH2/Australia_SID_2606.pdf",
+        "folder": "WH2",
+        "country": "Australia",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Australia_STAR_2606.pdf",
+        "path": "data/2026/WH2/Australia_STAR_2606.pdf",
+        "folder": "WH2",
+        "country": "Australia",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Indonesia_STAR_2606.pdf",
+        "path": "data/2026/WH2/Indonesia_STAR_2606.pdf",
+        "folder": "WH2",
+        "country": "Indonesia",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Malesia_RMAC_2606.pdf",
+        "path": "data/2026/WH2/Malesia_RMAC_2606.pdf",
+        "folder": "WH2",
+        "country": "Malesia",
+        "chart-type": "RMAC",
+        "cycle": "2606"
+    },
+    {
+        "name": "Malesia_SID_2606.pdf",
+        "path": "data/2026/WH2/Malesia_SID_2606.pdf",
+        "folder": "WH2",
+        "country": "Malesia",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Malesia_STAR_2606.pdf",
+        "path": "data/2026/WH2/Malesia_STAR_2606.pdf",
+        "folder": "WH2",
+        "country": "Malesia",
+        "chart-type": "STAR",
+        "cycle": "2606"
+    },
+    {
+        "name": "Japan_RMAC_2137.pdf",
+        "path": "data/2026/WH3/Japan_RMAC_2137.pdf",
+        "folder": "WH3",
+        "country": "Japan",
+        "chart-type": "RMAC",
+        "cycle": "2137"
+    },
+    {
+        "name": "Japan_SID_2606.pdf",
+        "path": "data/2026/WH3/Japan_SID_2606.pdf",
+        "folder": "WH3",
+        "country": "Japan",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Japan_STAR_2138.pdf",
+        "path": "data/2026/WH3/Japan_STAR_2138.pdf",
+        "folder": "WH3",
+        "country": "Japan",
+        "chart-type": "STAR",
+        "cycle": "2138"
+    },
+    {
+        "name": "Korea_AIRPORT_2139.pdf",
+        "path": "data/2026/WH3/Korea_AIRPORT_2139.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "AIRPORT",
+        "cycle": "2139"
+    },
+    {
+        "name": "Korea_APP_2139.pdf",
+        "path": "data/2026/WH3/Korea_APP_2139.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "APP",
+        "cycle": "2139"
+    },
+    {
+        "name": "Korea_GNSS-ARRS_2139.pdf",
+        "path": "data/2026/WH3/Korea_GNSS-ARRS_2139.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "GNSS-ARRS",
+        "cycle": "2139"
+    },
+    {
+        "name": "Korea_NOISE_2606.pdf",
+        "path": "data/2026/WH3/Korea_NOISE_2606.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "NOISE",
+        "cycle": "2606"
+    },
+    {
+        "name": "Korea_RMAC_2139.pdf",
+        "path": "data/2026/WH3/Korea_RMAC_2139.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "RMAC",
+        "cycle": "2139"
+    },
+    {
+        "name": "Korea_SID_2606.pdf",
+        "path": "data/2026/WH3/Korea_SID_2606.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "SID",
+        "cycle": "2606"
+    },
+    {
+        "name": "Korea_STAR_elo.pdf",
+        "path": "data/2026/WH3/Korea_STAR_elo.pdf",
+        "folder": "WH3",
+        "country": "Korea",
+        "chart-type": "STAR",
+        "cycle": "elo"
+    }
+]

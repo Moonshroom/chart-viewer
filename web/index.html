@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chart-viewer</title>
-    <link rel="stylesheet" href="style.css?v=5">
+    <title>note-finder</title>
+    <link rel="stylesheet" href="style.css?v=6">
 <link rel="apple-touch-icon" sizes="180x180" href="./Favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./Favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./Favicon/favicon-16x16.png">
@@ -22,41 +22,90 @@
   
 <div id="update-popup" class="popup-overlay">
     <div class="popup-content">
-        <h3>Build v1.5</h3>
+                    <h1 class="logo-container">
+    <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -1100 960 960" width="28px" fill="#e3e3e3">
+        <path d="M640-560v-126 126ZM174-132q-20 8-37-4.5T120-170v-560q0-13 7.5-23t20.5-15l212-72 240 84 186-72q20-8 37 4.5t17 33.5v337q-15-23-35.5-42T760-528v-204l-120 46v126q-21 0-41 3.5T560-546v-140l-160-56v523l-226 87Zm26-96 120-46v-468l-120 40v474Zm496.5-32q22.5-20 23.5-60 1-34-22.5-57T640-400q-34 0-57 23t-23 57q0 34 23 57t57 23q34 0 56.5-20ZM640-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T778-238l102 102-56 56-102-102q-18 11-38.5 16.5T640-160ZM320-742v468-468Z"/>
+    </svg> 
+    <span>NOTE-FINDER</span><span style="font-size: 14px; color: #888;"> v 1.0.6 </span>
+</h1><br>
+        <h2>Release Notes</h2   ><br>
         <ul class="changelog-list">
             <li>Added support for <b> Approach Charts</b>.</li>
-            <li>Rebuild <b> highlighting</b> system.</li>
-            <li>New PDFs: <b>All SID/STAR</b> and <b>All Approach</b> charts with full OCR.</li>
-            <li>Rebuilt Chart Type & Cell selectors.</li>
-            <li>New feature: Global Note Search.</li>
-            <li>Implemented database auto-loading.</li>
+            <li>Rebuild highlighting system.</li>
+            <li>All PDFs and charts with full integrated Optical Character Recognition (OCR).</li>
+            <li><b>Rebuilt Chart Type & Cell Selectors:</b> Added interactive buttons for all filter types to narrow down the PDF search scope.</li>
+            <li><b>Note Search in All PDFs:</b> Type any text, ICAO or keyword into the global input box to instantly filter and find matching charts containing those OCR notes.</li>
+            <li><b>Database Auto-Loading:</b> The PDF database now loads automatically upon startup without requiring manual reloads.</li>
+                       <div class="matrix-container">
+    <div class="matrix-title">DATABASE COVERAGE MATRIX:</div>
+    <table class="status-matrix">
+        <thead>
+            <tr>
+                <th>CELL</th>
+                <th>SID</th>
+                <th>STAR</th>
+                <th>GNSS-ARRS</th>
+                <th>NOISE</th>
+                <th>RMAC</th>
+                <th>ABP</th>
+                <th>APT</th>
+                <th>APP</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="cell-name">EH1</td>
+                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td>
+            </tr>
+            <tr>
+                <td class="cell-name">EH2</td>
+                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td>
+            </tr>
+            <tr>
+                <td class="cell-name">WH1</td>
+                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟨</td><td>🟨</td><td>🟨</td>
+            </tr>
+            <tr>
+                <td class="cell-name">WH2</td>
+                <td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟨</td><td>🟨</td><td>🟨</td>
+            </tr>
+            <tr>
+                <td class="cell-name">WH3</td>
+                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟥</td><td>🟥</td><td>🟥</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
         </ul>
         <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
     </div>
 </div>
     <div class="app-container">
         <aside class="sidebar">
-            
-            <h2>⚙ Tools</h2>
+            <h2 class="logo-container">
+    <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -1100 960 960" width="28px" fill="#e3e3e3">
+        <path d="M640-560v-126 126ZM174-132q-20 8-37-4.5T120-170v-560q0-13 7.5-23t20.5-15l212-72 240 84 186-72q20-8 37 4.5t17 33.5v337q-15-23-35.5-42T760-528v-204l-120 46v126q-21 0-41 3.5T560-546v-140l-160-56v523l-226 87Zm26-96 120-46v-468l-120 40v474Zm496.5-32q22.5-20 23.5-60 1-34-22.5-57T640-400q-34 0-57 23t-23 57q0 34 23 57t57 23q34 0 56.5-20ZM640-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T778-238l102 102-56 56-102-102q-18 11-38.5 16.5T640-160ZM320-742v468-468Z"/>
+    </svg> 
+    <span>NOTE-FINDER</span>
+</h2>
 <button id="btn-refresh-data" class="primary-btn">
-    Refresh Data
+    REFRESH DATA
 </button>
-  <div id="stats-display"></div>
-
 <div id="status-badge" class="hidden"></div>
-            
-            <div class="filter-group">
-                <label for="search-country">Filter by Country:</label>
-                <input type="text" id="search-country" placeholder="e.g. Poland, Germany">
-            </div>
-
-
-                <div class="filter-group">
-                <label>Filter by Cell:</label>
-                <div id="cell-buttons" class="button-grid">
+    <div class="filter-group">
+        <label>NOTE SEARCH IN ALL PDFs:</label>
+        <textarea id="global-search" placeholder="e.g.  Notes, Texts, ICAOs, Waypoints, Airport Names..." rows="3"></textarea>
     </div>
-
-            </div>
+            
+    <div class="filter-group">
+        <label for="search-country">Filter by Country:</label>
+        <input type="text" id="search-country" placeholder="e.g. Poland, Germany">
+    </div>
+    <div class="filter-group">
+        <label>Filter by Cell:</label>
+        <div id="cell-buttons" class="button-grid">
+        </div>
+     </div>
 
             <div class="filter-group">
 <label>Filter by Chart Type:</label>
@@ -70,11 +119,6 @@
         </div>
 </div>
             </div>
-<div class="filter-group">
-    <label>GLOBAL NOTE SEARCH:</label>
-    <!-- Zmieniamy input na textarea, dodajemy atrybut rows -->
-    <textarea id="global-search" placeholder="Search in OCR text fiiles...." rows="2"></textarea>
-</div>
             
 <div id="stats-container" style="
     padding: 10px;
@@ -83,11 +127,9 @@
     border-top: 1px solid #2d2d33;
 ">
 <div id="footer-menu">
-    <div id="stats-container">
-        <div id="stats-charts">PDFs found: 0</div>
-        <div id="stats-cycles">DateBases found: 0</div>
-    </div>
-    <div id="build-info">Build 1.5 - SSCh & APPCh full database</div>
+    <div id="build-info">BUILD 1.0.6 <br> DATABASE INFO</div><br>
+    <div id="stats-display"></div>
+
 </div>
             
         </aside>
@@ -116,19 +158,19 @@
 
         <iframe id="pdf-viewer" title="PDF Viewer" src="" style="display: none; width: 100%; height: 100%; border: none;"></iframe>
             <div class="no-pdf" id="no-pdf-message">
-            <h3>No Charts Selected</h3>
+            <h3>NO CHARTS SELECTED</h3>
         </div>
     </div>
 </section>
     </div>
   </div>
-  <div id="second-tool" class="tab-content">
+  <!-- <div id="second-tool" class="tab-content">
     <div style="padding: 20px; color: white;">
         <h2>Drugie narzędzie</h2>
         <p>null</p>
     </div>
-</div>
-    <script src="app.js?v=5"></script>
+</div> -->
+    <script src="app.js?v=6"></script>
     <script src="aptinfo.js?v=1"></script>
 </body>
 </html>

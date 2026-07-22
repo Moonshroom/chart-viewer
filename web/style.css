@@ -63,10 +63,11 @@ body {
   min-width: 280px;
   background-color: #1a1a1e;
   border-right: 1px solid #29292e;
-  padding: 15px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
+  box-sizing: border-box;
 }
 
 .app-container .sidebar h2 {
@@ -145,8 +146,8 @@ body {
 }
 
 .app-container .airports-panel {
-  width: 320px;
-  min-width: 320px;
+  width: 300px;
+  min-width: 250px;
   background-color: #16161a;
   border-right: 1px solid #29292e;
   display: flex;
@@ -450,6 +451,9 @@ position: absolute;
     cursor: pointer;
     text-align: center;
     transition: background 0.2s;
+    width: 100%;
+    padding: 8px 4px;
+    box-sizing: border-box;
 }
 
 
@@ -462,7 +466,7 @@ position: absolute;
 .detailed-filters {
     display: grid;
     grid-template-columns: 1fr 1fr; 
-    gap: 8px;
+    gap: 6px;
     margin-top: 10px;
 }
 
@@ -503,24 +507,30 @@ position: absolute;
 }
 
 #footer-menu {
-    margin-top: auto; 
-    border-top: 1px solid #1a1a1a;
-    padding: 10px;
-    text-align: center;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 12px 4px 4px 4px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    box-shadow: none;
+    overflow-x: auto;
+    font-size: 12px;
+    color: #888;
 }
 
+
 #stats-container {
-    padding: 15px;
     margin-top: auto; 
-    font-size: 0.97rem;
-    color: #727272; 
-    text-align: center;
-    border-top: 1px solid #1a1a1a;
+    color: #888; 
+    font-family: 'Courier New', Courier, monospace; 
+    font-size: 10px; 
+    line-height: 1.4;
 }
 
 #build-info {
-    font-size: 0.75rem;
-    color: #707070; 
+    color: #888;
+    text-align: center;
 }
 
 #status-badge {
@@ -583,15 +593,6 @@ position: absolute;
     z-index: 1000;
 }
 
-.popup-content {
-    background: #1e1e1e; 
-    color: white;
-    padding: 25px;
-    border-radius: 8px;
-    border-left: 5px solid #2ecc71; 
-    max-width: 500px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
 
 .changelog-list {
     list-style: none;
@@ -610,6 +611,19 @@ position: absolute;
     position: absolute; left: 0;
 }
 
+.popup-content {
+    background: #1e1e1e; 
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    border-left: 5px solid #2ecc71; 
+    max-width: 600px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .popup-content button {
     background: #2ecc71;
     color: white;
@@ -618,6 +632,15 @@ position: absolute;
     cursor: pointer;
     border-radius: 4px;
     margin-top: 15px;
+    margin-left: 15px auto 0 auto;
+    width: auto; /* Szerokość dostosowana do tekstu */
+    display: inline-block;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.popup-content button:hover {
+    background: #27ae60; 
+    transform: translateY(-1px); 
 }
 
 .button-grid {
@@ -650,7 +673,7 @@ position: absolute;
     box-sizing: border-box;
     
 
-    height: 100px; 
+    height: 80px; 
     resize: none; 
     line-height: 1.4;
     font-family: inherit;
@@ -661,3 +684,79 @@ position: absolute;
     border-color: #007bff; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+#search-country {
+    background: #1e1e26;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: #e0e0e0;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    gap: 10px;          
+    margin: 0;          
+}
+
+.logo-container svg {
+    flex-shrink: 0;     
+}
+
+.matrix-container {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: #0b0f12; 
+    border: 1px solid #1f2937;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.matrix-title {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 6px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.status-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; /* Monospace tylko tutaj dla idealnego wyrównania kolumn */
+    font-size: 11px;
+    text-align: center;
+}
+
+.status-matrix th {
+    color: #00ccff; /* Niebieski akcent w stylu [INFO] */
+    font-weight: 600;
+    padding: 4px 2px;
+    border-bottom: 1px solid #1f2937;
+}
+
+.status-matrix td {
+    padding: 5px 2px;
+    color: #ccc;
+}
+
+.status-matrix .cell-name {
+    text-align: left;
+    font-weight: bold;
+    color: #e3e3e3;
+    padding-left: 4px;
+}
+
+/* Subtelny efekt podświetlenia wiersza po najechaniu */
+.status-matrix tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+

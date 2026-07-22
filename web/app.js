@@ -26,6 +26,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 });
 
 // --- Refresh Data Button ---
+
 document.getElementById('btn-refresh-data').addEventListener('click', async () => {
     const btn = document.getElementById('btn-refresh-data');
     btn.textContent = "Loading all...";
@@ -41,12 +42,13 @@ document.getElementById('btn-refresh-data').addEventListener('click', async () =
         
         console.log("[Success] All databases refreshed.");
         await new Promise(resolve => setTimeout(resolve, 1000));
+        window.location.href = window.location.pathname + '?reload=' + new Date().getTime();
         
     } catch (err) {
         console.error("[Error] Failed to reload databases:", err);
         alert("Error: Failed to refresh data. Check console for details.");
     } finally {
-        btn.textContent = " Refresh Data ";
+        btn.textContent = " REFRESH DATA ";
         btn.disabled = false;
     }
 });
@@ -75,31 +77,82 @@ async function loadChartsForYear(year) {
     const statsDisplay = document.getElementById('stats-display');
     const btn = document.getElementById('btn-refresh-data');
 
-    if (btn) btn.textContent = "Loading...";
-    statsDisplay.innerHTML = "<em>Updating...</em>";
+    const getTime = (secondsToAdd = 0) => {
+        const now = new Date();
+        now.setTime(now.getTime() + (secondsToAdd * 1000));
+        return now.toTimeString().split(' ')[0];
+    };
+
+    if (btn) btn.textContent = "[PROCESSING...]";
+    statsDisplay.innerHTML = `<span style="color: #888; font-family: 'Courier New', monospace; font-size: 10px;">[${getTime()}] [sys] querying...</span>`;
 
     try {
         const response = await fetch(`./database_${year}.json`);
         
-        if (!response.ok) throw new Error("Network error");
+        if (!response.ok) throw new Error("HTTP " + response.status);
         
         chartDatabase = await response.json();
-        updateFooterStats();
         updateChartList();
         
+        const uniqueCountries = [...new Set(chartDatabase.map(item => item.country))].length;
+
+        // Wyznaczenie zakresu cykli (cycle range)
+        const cycles = [...new Set(chartDatabase.map(item => item.cycle))].filter(Boolean).sort();
+        let cycleRangeText = "NONE";
+        if (cycles.length === 1) {
+            cycleRangeText = cycles[0];
+        } else if (cycles.length > 1) {
+            cycleRangeText = `${cycles[0]} to ${cycles[cycles.length - 1]}`;
+        }
+
+        const folderCounts = chartDatabase.reduce((acc, item) => {
+            const folder = item.folder || 'UNKNOWN';
+            acc[folder] = (acc[folder] || 0) + 1;
+            return acc;
+        }, {});
+
+        const typeCounts = chartDatabase.reduce((acc, item) => {
+            const type = item['chart-type'] || 'UNKNOWN';
+            acc[type] = (acc[type] || 0) + 1;
+            return acc;
+        }, {});
+
+        let logsHtml = `
+            <span style="color: #666;">[${getTime(1)}]</span> <span style="color: #21912a;">[LOAD]</span> <span style="color: #888;">database_${year}.json</span><br>
+            <span style="color: #666;">[${getTime(2)}]</span> <span style="color: #888;">PDF-RECORDS: ${chartDatabase.length}</span><br>
+            <span style="color: #666;">[${getTime(2.5)}]</span> <span style="color: #888;">CYCLE RANGE: ${cycleRangeText}</span><br>
+            <span style="color: #444;">----------------------------------------</span><br>
+        `;
+
+        logsHtml += `
+            <span style="color: #666;">[${getTime(3)}]</span> <span style="color: #888;">COUNTRIES: ${uniqueCountries}</span><br>
+        `;
+        for (const [type, count] of Object.entries(typeCounts)) {
+            logsHtml += `<span style="color: #666;">[${getTime(4)}]</span> <span style="color: #888;">${type}: ${count} PDFs</span><br>`;
+        }
+
+        logsHtml += `
+            <span style="color: #444;">----------------------------------------</span><br>
+        `;
+
+        for (const [folder, count] of Object.entries(folderCounts)) {
+            logsHtml += `<span style="color: #666;">[${getTime(5)}]</span> <span style="color: #888;">${folder}: ${count} PDFs</span><br>`;
+        }
+
         statsDisplay.innerHTML = `
-            <div style="color: #4add87;">
-                <strong> ✔ Database successfully loaded. </strong>
+            <div style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.4;">
+                ${logsHtml}
             </div>
         `;
     } catch (err) {
         statsDisplay.innerHTML = `
-            <div style="color: #fb7185;">
-                <strong>❌ Error: Update failed.</strong>
+            <div style="font-family: 'Courier New', Courier, monospace; font-size: 10px; line-height: 1.4;">
+                <span style="color: #666;">[${getTime(6)}]</span> <span style="color: #ff3333;">[${err.name || "ERROR"}]</span> <span style="color: #ff9999;">Failed load database_${year}</span><br>
+                <span style="color: #888; font-size: 10px;">>${err.stack}</span>
             </div>
         `;
     } finally {
-        if (btn) btn.textContent = "Refresh Data";
+        if (btn) btn.textContent = "REFRESH DATA";
     }
 }
 
@@ -313,18 +366,5 @@ function updateTypeUI() {
     }
 }
 
-function updateFooterStats() {
-    const statsCharts = document.getElementById('stats-charts');
-    const statsCycles = document.getElementById('stats-cycles');
-    
-    if (statsCharts) {
-        statsCharts.textContent = `PDFs found: ${chartDatabase.length}`;
-    }
-    
-    if (statsCycles) {
-        statsCycles.textContent = `DateBases found: ${availableDatabases.length}`;
-    }
-}
-
 searchCountryInput.addEventListener('input', updateChartList);
-btnHelp.addEventListener('click', () => helpBox.classList.toggle('hidden'));
+// // btnHelp.addEventListener('click', () => helpBox.classList.toggle('hidden'));
