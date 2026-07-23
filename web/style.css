@@ -76,19 +76,31 @@ body {
   padding-bottom: 8px;
 }
 
-.app-container .sidebar .primary-btn {
-  background-color: #007acc;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
+/* Nowy, pomniejszony i subtelny styl dla Twojego przycisku */
+#btn-refresh-data {
+    background-color: transparent;
+    border: 1px solid #303038;
+    color: #888891;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    text-align: center;
+    box-sizing: border-box;
 }
 
-.app-container .sidebar .primary-btn:hover {
-  background-color: #005999;
+#btn-refresh-data:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: #007acc;
+    color: #e1e1e6;
+}
+
+#btn-refresh-data:active {
+    transform: scale(0.98);
 }
 
 .app-container .sidebar .filter-group label {
@@ -146,8 +158,8 @@ body {
 }
 
 .app-container .airports-panel {
-  width: 300px;
-  min-width: 250px;
+  width: 500px;
+  min-width: 400px;
   background-color: #16161a;
   border-right: 1px solid #29292e;
   display: flex;
@@ -183,7 +195,7 @@ background: #25252a;
 }
 
 .app-container .airports-panel .panel-header h3 {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #e1e1e6;
 }
 
@@ -203,15 +215,15 @@ background: #25252a;
 }
 
 .app-container .airports-panel .airport-item {
-    background-color: #1a1a1e;
-    border: 1px solid #29292e;
-    padding: 12px;
+    background-color: #232329;
+    border: 1px solid #303038;
+    padding: 10px 14px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     text-align: left;
     width: 100%;
-    animation: fadeIn 0.2s ease-in-out;
+    box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -219,48 +231,90 @@ background: #25252a;
     to { opacity: 1; transform: translateY(0); }
 }
 
-.app-container .airports-panel .airport-item {
-  background-color: #232329;
-  border: 1px solid #303038;
-  padding: 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: left;
-  width: 100%;
-}
-
 .app-container .airports-panel .airport-item:hover {
-  border-color: #007acc;
-  background-color: #222226;
+    border-color: #007acc;
+    background-color: #0b4b75;
 }
 
 .app-container .airports-panel .airport-item.active {
-  border-color: #007acc;
-  background-color: #007acc;
+    border-color: #007acc;
+    background-color: #007accaf;
+    border-left: 5px solid rgba(246, 247, 248, 0.308);
+    
 }
 
-.app-container .airports-panel .airport-item.active .icao, .app-container .airports-panel .airport-item.active .name, .app-container .airports-panel .airport-item.active .country {
-  color: white !important;
+.chart-details-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
 }
 
-.app-container .airports-panel .airport-item .icao {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #007acc;
+.app-container .airports-panel .chart-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 6px;       /* Mniejszy padding */
+    font-size: 0.7rem;        /* Nieco mniejsza czcionka */
+    font-weight: 700;
+    border-radius: 4px;
+    color: #ffffff;
+    min-width: 60px;        /* Zmniejszone z 75px na 60px */
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.app-container .airports-panel .country-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #e1e1e6;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+    text-align: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.08); /* Delikatna kreseczka oddzielająca typ od kraju */
+    border-right: 1px solid rgba(255, 255, 255, 0.08); /* Delikatna kreseczka oddzielająca typ od kraju */
 }
 
 
-.app-container .airports-panel .airport-item .name {
-  font-size: 0.85rem;
-  color: #e1e1e6;
-  margin-top: 2px;
+/* Kontener dla folderu i cyklu w jednej linii po prawej */
+.chart-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: #707075;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 4px 10px;
+    border-radius: 4px;
 }
 
-.app-container .airports-panel .airport-item .country {
-  font-size: 0.75rem;
-  color: #a8a8b3;
-  margin-top: 4px;
+.chart-folder {
+    font-weight: 600;
+    color: #97979b;
+    opacity: 0.6;
+}
+
+.chart-separator {
+    opacity: 0.4;
+}
+
+.chart-cycle {
+    opacity: 0.6;
+}
+
+/* Kolory po zaznaczeniu elementu */
+.app-container .airports-panel .airport-item.active .country-title,
+.app-container .airports-panel .airport-item.active, 
+.app-container .airports-panel .airport-item.active .chart-folder,
+.app-container .airports-panel .airport-item.active .chart-cycle,
+.app-container .airports-panel .airport-item.active .chart-separator {
+    color: #ffffff !important;
+    opacity: 1 !important;
 }
 
 
@@ -283,36 +337,13 @@ background: #25252a;
 
 .warning-banner {
     max-width: 1000px;
-    margin: 10px auto;
+    margin: 5px auto;
     background-color: #333333; 
     color: #ffd700; 
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
     border-left: 5px solid #ff4757; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
-/* .warning-banner .close-btn {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 20px;
-    cursor: pointer;
-    position: absolute;
-    top: 5px;
-    right: 10px;
-} */
-
-.warning-banner .close-btn:hover { color: white; }
-
-.warning-banner .close-btn {
-    background: none;
-    border: none;
-    color: #aaa;
-    font-size: 20px;
-    cursor: pointer;
-    position: absolute;
-    top: 5px;
-    right: 10px;
 }
 
 .viewer-panel .viewer-header label {
@@ -385,8 +416,22 @@ position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
 }
-
+.no-pdf h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e1e1e6;          /* Jaśniejszy kolor nagłówka */
+    margin: 0 0 8px 0;
+    text-transform: uppercase; /* Opcjonalnie: wielkie litery dla spójności */
+    letter-spacing: 0.5px;
+}
+.no-pdf p {
+    font-size: 0.9rem;
+    color: #a8a8b3;
+    margin: 0;
+    line-height: 1.4;
+}
 .airport-item {
     display: block;
     width: 100%;
@@ -424,19 +469,6 @@ position: absolute;
     text-transform: uppercase;
 }
 
-
-.type-btn {
-    background-color: #333; 
-    color: #888; 
-    transition: all 0.3s ease;
-}
-
-
-.type-btn.active {
-    background-color: #007bff; 
-    color: white;
-}
-
 .filter-wrapper { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 .main-filters { display: flex; gap: 5px; }
 .main-filters button { flex: 1; }
@@ -458,8 +490,13 @@ position: absolute;
 
 
 .filter-btn.active {
-    background-color: #2563eb; 
-    border-color: #60a5fa;
+    border-color: #007acc;
+    background-color: #007accaf;
+    border-left: 5px solid rgba(246, 247, 248, 0.308);
+}
+.filter-btn:hover {
+    border-color: #007acc;
+    background-color: #0b4b75;
 }
 
 
@@ -518,7 +555,45 @@ position: absolute;
     font-size: 12px;
     color: #888;
 }
+/* Styl dla elementu DATABASE INFO, żeby wyglądał jak przycisk */
+.database-toggle {
+    display: inline-block;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.2s ease, transform 0.1s ease;
+    user-select: none;
+    margin-top: 2px;
+}
 
+.database-toggle:hover {
+    color: #007acc;
+}
+
+.database-toggle:active {
+    transform: scale(0.97);
+}
+
+/* Stan aktywny (gdy statystyki są rozwinięte) */
+.database-toggle.active {
+    color: #007acc;
+    font-weight: bold;
+}
+
+/* Kontener statystyk z animacją zwijania/rozwijania */
+#stats-display {
+    max-height: 400px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin 0.3s ease-in-out;
+    opacity: 1;
+    margin-top: 8px;
+}
+
+/* Stan schowany */
+#stats-display.collapsed {
+    max-height: 0px !important;
+    opacity: 0;
+    margin-top: 0 !important;
+}
 
 #stats-container {
     margin-top: auto; 
@@ -695,12 +770,18 @@ position: absolute;
     width: 100%;
     box-sizing: border-box;
 }
+#search-country:focus {
+    outline: none;
+    border-color: #007bff; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 
 .logo-container {
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding-bottom: 15px;
     width: 100%;
     gap: 10px;          
     margin: 0;          

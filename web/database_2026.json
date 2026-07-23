@@ -17,7 +17,7 @@
         "name": "Finland_RADAR_2606.pdf",
         "path": "data/2026/EH1/Finland_RADAR_2606.pdf",
         "folder": "EH1",
-        "country": "Finland",
+        "country": "Great Britain",
         "chart-type": "RMAC",
         "cycle": "2606",
         "pages": [
@@ -59,7 +59,7 @@
         "name": "Finland_RADAR_2606.pdf",
         "path": "data/2026/EH2/Finland_RADAR_2606.pdf",
         "folder": "EH2",
-        "country": "Finland",
+        "country": "New Zealand",
         "chart-type": "APP",
         "cycle": "2606",
         "pages": [
@@ -73,7 +73,7 @@
         "name": "Finland_SID_2606.pdf",
         "path": "data/2026/EH2/Finland_SID_2606.pdf",
         "folder": "EH2",
-        "country": "Finland",
+        "country": "Republic of São Tomé and Príncipe",
         "chart-type": "AIRPORT",
         "cycle": "2606",
         "pages": [

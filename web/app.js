@@ -48,7 +48,7 @@ document.getElementById('btn-refresh-data').addEventListener('click', async () =
         console.error("[Error] Failed to reload databases:", err);
         alert("Error: Failed to refresh data. Check console for details.");
     } finally {
-        btn.textContent = " REFRESH DATA ";
+        btn.textContent = " ↻ REFRESH DATA ";
         btn.disabled = false;
     }
 });
@@ -152,7 +152,7 @@ async function loadChartsForYear(year) {
             </div>
         `;
     } finally {
-        if (btn) btn.textContent = "REFRESH DATA";
+        if (btn) btn.textContent = "↺ REFRESH DATA";
     }
 }
 
@@ -283,21 +283,23 @@ function updateChartList() {
 
     updateTypeUI();
 
-    filtered.forEach(chart => {
-        const typeClass = `type-${chart["chart-type"].toLowerCase().replace('/', '-')}`;
-        const fileNameWithoutExt = chart.name.replace(/\.[^/.]+$/, "");
-        const parts = fileNameWithoutExt.split('_');
-        const cycle = parts.length >= 3 ? parts[2] : ""; 
+filtered.forEach(chart => {
+    const typeClass = `type-${chart["chart-type"].toLowerCase().replace('/', '-')}`;
+    const fileNameWithoutExt = chart.name.replace(/\.[^/.]+$/, "");
+    const parts = fileNameWithoutExt.split('_');
+    const cycle = parts.length >= 3 ? parts[2] : ""; 
 
-        const btn = document.createElement('button');
-        btn.className = 'airport-item';
-        btn.innerHTML = `
-            <div class="country-title">${chart.country}</div>
-            <div class="chart-details-row">
-                <span class="chart-type ${typeClass}">${chart["chart-type"]}</span>
+    const btn = document.createElement('button');
+    btn.className = 'airport-item';
+    btn.innerHTML = `
+        <div class="chart-details-row">
+            <span class="chart-type ${typeClass}">${chart["chart-type"]}</span>
+            <span class="country-title" title="${chart.country}">${chart.country}</span>
+            <div class="chart-meta">
                 <span class="chart-folder">📁 ${chart.folder}</span>
-                ${cycle ? `<span class="chart-cycle">📅 ${cycle}</span>` : ''}
-            </div>`;
+                ${cycle ? `<span class="chart-separator">•</span><span class="chart-cycle">${cycle}</span>` : ''}
+            </div>
+        </div>`;
         
 btn.onclick = () => {
     document.querySelectorAll('.airport-item').forEach(el => el.classList.remove('active'));
@@ -331,7 +333,7 @@ viewer.onload = () => {
     const items = document.querySelectorAll('.airport-item');
 
     const countDisplay = document.getElementById('chart-count');
-    if (countDisplay) countDisplay.textContent = `${filtered.length} found`;
+    if (countDisplay) countDisplay.textContent =`🗐 Showing ${filtered.length} PDFs.`;
 }
 
 function updateTypeUI() {
@@ -367,4 +369,14 @@ function updateTypeUI() {
 }
 
 searchCountryInput.addEventListener('input', updateChartList);
-// // btnHelp.addEventListener('click', () => helpBox.classList.toggle('hidden'));
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('db-toggle-btn');
+    const statsDisplay = document.getElementById('stats-display');
+
+    if (toggleBtn && statsDisplay) {
+        toggleBtn.addEventListener('click', () => {
+            statsDisplay.classList.toggle('collapsed');
+            toggleBtn.classList.toggle('active');
+        });
+    }
+});
