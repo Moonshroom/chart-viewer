@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>note-finder</title>
-    <link rel="stylesheet" href="style.css?v=6">
+    <link rel="stylesheet" href="style.css?v=8">
 <link rel="apple-touch-icon" sizes="180x180" href="./Favicon/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="./Favicon/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="./Favicon/favicon-16x16.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
-    <!-- <nav class="top-nav">
-        <img src="favicon/favicon-16x16.png" alt="Logo" class="nav-logo">
-        <div class="nav-brand">Chart Viewer</div>
+    <nav class="top-nav">
+        <div class="nav-brand"></div>
         <button class="nav-tab active" onclick="showTab('note-searcher')">Note Finder</button>
-        <button class="nav-tab" onclick="showTab('airport-info')">WebAIC</button>
-    </nav> -->
+        <button class="nav-tab" onclick="showTab('AIRAC-calendar')">AIRAC Calendar</button>
+    </nav>
 
 <div id="note-searcher" class="tab-content active">
   
@@ -163,13 +162,99 @@
 </section>
     </div>
   </div>
-  <!-- <div id="second-tool" class="tab-content">
+<div id="AIRAC-calendar" class="tab-content">
     <div style="padding: 20px; color: white;">
-        <h2>Drugie narzędzie</h2>
-        <p>null</p>
+        
+        <!-- Nowy, estetyczny nagłówek z ikoną wektorową dopasowaną do Note Findera -->
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <div>
+                <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #f3f4f6;">AIRAC Calendar for Charting</h2>
+                <p class="airac-subtitle" style="margin: 0; font-size: 12px; color: #9ca3af; text-transform: uppercase;">AIRAC-SLIDER</p>
+            </div>
+        </div>
+
+        <div class="airac-dashboard">
+            <!-- Current Cycle Statistics -->
+            <div class="dashboard-stats">
+                <h3 class="dashboard-title">Current Cycle Statistics</h3>
+                
+                <div class="stats-grid-weeks">
+                    <!-- Week 1 / 5 -->
+                    <div class="stat-week-box">
+                        <div class="stat-week-title" id="week-label-1">Week 1 / 5</div>
+                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-1">--</strong></div>
+                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-1">--</strong></div>
+                        <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-1">--</strong></div>
+                    </div>
+                    <!-- Week 2 / 6 -->
+                    <div class="stat-week-box">
+                        <div class="stat-week-title" id="week-label-2">Week 2 / 6</div>
+                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-2">--</strong></div>
+                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-2">--</strong></div>
+                        <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-2">--</strong></div>
+                    </div>
+                    <!-- Week 3 / 7 -->
+                    <div class="stat-week-box">
+                        <div class="stat-week-title" id="week-label-3">Week 3 / 7</div>
+                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-3">--</strong></div>
+                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-3">--</strong></div>
+                        <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-3">--</strong></div>
+                    </div>
+                    <!-- Week 4 / 8 -->
+                    <div class="stat-week-box">
+                        <div class="stat-week-title" id="week-label-4">Week 4 / 8</div>
+                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-4">--</strong></div>
+                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-4">--</strong></div>
+                        <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-4">--</strong></div>
+                    </div>
+                </div> <!-- Koniec stats-grid-weeks -->
+
+                <!-- Poniżej kafelków tygodni – Twój nowy Production Timeline -->
+                <div id="extended-production-timeline" class="timeline-container" style="margin-top: 20px; padding: 20px; background: #18181b; border-radius: 8px;">
+                    <!-- Tu skrypt wstawia oś czasu -->
+                </div>
+
+            </div> <!-- Koniec dashboard-stats -->
+        </div> <!-- Koniec airac-dashboard -->
+
+<div class="airac-tool-wrapper">
+    <!-- Kontrolki nawigacyjne -->
+    <div class="airac-controls">
+        <select id="cycle-jump-select">
+            <option value="">-- Jump to Cycle --</option>
+        </select>
+        
+        <button id="view-toggle-btn" class="airac-toggle-btn">
+            Switch to Table View
+        </button>
     </div>
-</div> -->
+
+    <!-- Kontener tabeli (domyślnie ukryty) -->
+    <div id="table-view-container">
+        <table class="airac-full-table">
+            <tbody id="table-view-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Kontener Slidera z przyciskami nawigacji -->
+    <div class="airac-slider-wrapper">
+        <button id="slider-prev" class="slider-btn slider-btn-left">&#10094;</button>
+        
+        <div class="airac-slider-viewport">
+            <div id="airac-slider-track" class="airac-slider-track">
+                <!-- Kafelki generowane dynamicznie przez JS -->
+            </div>
+        </div>
+
+        <button id="slider-next" class="slider-btn slider-btn-right">&#10095;</button>
+    </div>
+    
+    <div class="airac-reset-container">
+        <button id="slider-reset" class="slider-reset-btn">Back to current cycle</button>
+    </div>
+</div>
+
     <script src="app.js?v=6"></script>
-    <script src="aptinfo.js?v=1"></script>
+    <script src="airaccalendar.js?v=1"></script>
 </body>
 </html>

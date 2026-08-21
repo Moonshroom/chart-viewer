@@ -54,7 +54,7 @@ body {
 
 .app-container {
   display: flex;
-  height: 100vh;
+  height: 95vh;
   width: 100vw;
 }
 
@@ -839,5 +839,774 @@ position: absolute;
 /* Subtelny efekt podświetlenia wiersza po najechaniu */
 .status-matrix tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.03);
+}
+
+
+.airac-tool-wrapper {
+    padding: 20px;
+    color: white;
+    font-family: sans-serif;
+}
+
+.airac-subtitle {
+    color: #aaa;
+    font-size: 14px;
+}
+
+.airac-timeline-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.cycle-box {
+    flex: 1;
+    min-width: 260px;
+    background: #2a2a2a;
+    border-radius: 8px;
+    padding: 15px;
+    opacity: 0.7;
+}
+
+.prev-cycle, .next-cycle {
+    background: #222;
+}
+
+.active-cycle {
+    flex: 1.2;
+    min-width: 320px;
+    background: #1e293b;
+    border: 2px solid #3b82f6;
+    opacity: 1;
+    position: relative;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+.cycle-badge {
+    font-size: 12px;
+    color: #888;
+    font-weight: bold;
+}
+
+.active-badge {
+    color: #60a5fa;
+}
+
+.cycle-box h3 {
+    margin: 5px 0 5px 0;
+    color: #fff;
+}
+
+.cycle-dates {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 15px;
+}
+
+.cycle-status {
+    margin-top: 15px;
+    font-size: 12px;
+    background: #333;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    color: #aaa;
+}
+
+.today-marker {
+    position: absolute;
+    top: -12px;
+    background: #ef4444;
+    color: white;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.timeline-label {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #cbd5e1;
+}
+
+.timeline-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+}
+
+.week-box {
+    flex: 1;
+    background: #334155;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 11px;
+    border-radius: 4px;
+    color: #cbd5e1;
+}
+
+/* Styl dla aktywnego tygodnia w torze produkcyjnym */
+.week-box.current-week {
+    background: #1e3a8a;
+    color: #fff;
+    border: 1px solid #60a5fa;
+    font-weight: bold;
+}
+
+/* Domyślnie wszystkie zawartości zakładek są ukryte */
+.tab-content {
+    display: none;
+}
+
+/* Gdy zakładka ma klasę active, staje się widoczna */
+.tab-content.active {
+    display: block;
+}
+
+/* Poszerzenie głównego wrappera narzędzia na cały ekran */
+.airac-tool-wrapper {
+    width: 100%;
+    max-width: 100% !important;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Kontener toru slidera */
+.airac-slider-track {
+    display: flex;
+    gap: 25px;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+
+/* Karta o szerokości 580px */
+.airac-slider-card {
+    min-width: 580px;
+    max-width: 580px;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 22px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+/* Przeszłość - mocniejsze wyszarzenie */
+.cycle-past {
+    opacity: 0.4;
+    filter: grayscale(30%);
+    background: #161616;
+}
+
+/* OBECNY CYKL - subtelniejsze, eleganckie podświetlenie bez mocnego blura */
+.cycle-current {
+    background: #222530;
+    border: 2px solid #3b82f6;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+    opacity: 1;
+}
+
+/* Przyszłość - lżejsze wyszarzenie */
+.cycle-future {
+    opacity: 0.75;
+    background: #1a1a24;
+    border: 1px solid #444;
+}
+
+/* Przyciski nawigacyjne slidera */
+.slider-btn {
+    background: rgba(34, 34, 42, 0.8);
+    border: 1px solid #3f3f46;
+    color: #e5e7eb;
+    font-size: 20px;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 6px;
+    z-index: 10;
+    transition: all 0.2s ease;
+    margin: 0 10px;
+}
+.slider-btn:hover {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+}
+
+.slider-reset-btn {
+    background: #22222a;
+    color: #e5e7eb;
+    border: 1px solid #3f3f46;
+    padding: 9px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.slider-reset-btn:hover {
+    background: #2d2d38;
+    border-color: #52525b;
+}
+
+/* Nagłówki i tabele wewnątrz karty */
+.airac-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+.airac-card-title { font-size: 20px; font-weight: bold; margin: 0; }
+.airac-card-dates { font-size: 14px; color: #9ca3af; }
+.airac-badge { font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+.badge-past { background: #374151; color: #9ca3af; }
+.badge-current { background: #3b82f6; color: #fff; }
+.badge-future { background: #065f46; color: #6ee7b7; }
+
+/* Większe czcionki i odstępy w tabeli */
+.airac-slider-card table {
+    font-size: 13px !important;
+}
+.airac-slider-card th, 
+.airac-slider-card td {
+    padding: 8px 6px !important;
+}
+
+.airac-dashboard {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    padding: 20px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    color: #fff;
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+.dashboard-stats {
+    flex: 2;
+    padding-right: 20px;
+}
+
+.dashboard-timeline {
+    flex: 1;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.dashboard-title {
+    margin-top: 0;
+    font-size: 14px;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Siatka 4 tygodni */
+.stats-grid-weeks {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.stat-week-box {
+    background: #202024;
+    border: 1px solid #2f2f35;
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.stat-week-title {
+    font-weight: bold;
+    color: #3b82f6;
+    margin-bottom: 8px;
+    text-align: center;
+    border-bottom: 1px solid #2f2f35;
+    padding-bottom: 4px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    color: #9ca3af;
+}
+
+.stat-row strong {
+    color: #f3f4f6;
+}
+
+/* Timeline */
+.timeline-track {
+    display: flex;
+    height: 8px;
+    background: #27272a;
+    border-radius: 4px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.timeline-bar {
+    height: 100%;
+    background: #3b82f6;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.timeline-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #6b7280;
+}
+
+@media (max-width: 1000px) {
+    .airac-dashboard {
+        flex-direction: column;
+    }
+    .dashboard-stats {
+        border-right: none !important;
+        padding-right: 0 !important;
+        border-bottom: 1px solid #27272a;
+        padding-bottom: 20px;
+    }
+    .stats-grid-weeks {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Kolory statusów w dashboardzie */
+.status-passed {
+    color: #ef4444 !important; /* Czerwony dla minionych */
+}
+
+.status-warning {
+    color: #f59e0b !important; /* Żółty/Pomarańczowy dla < 3 dni i Today */
+    font-weight: bold;
+}
+
+.status-safe {
+    color: #10b981 !important; /* Zielony dla pozostałych */
+}
+
+/* Podświetlenie aktywnego tygodnia w tabeli karty */
+.current-week-row {
+    background-color: rgba(16, 185, 129, 0.15) !important; /* Delikatna zielona poświata */
+    border-left: 3px solid #10b981;
+}
+
+/* --- Stylizacja tabeli i aktywnego tygodnia --- */
+.airac-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.airac-table th {
+    padding: 6px;
+    border-bottom: 1px solid #444;
+    color: #888;
+}
+
+.airac-table td {
+    padding: 7px 4px;
+}
+
+.airac-table-row {
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.airac-table-row-active {
+    border-bottom: 1px solid #2a2a2a;
+    background: rgba(16, 185, 129, 0.15);
+    border-left: 3px solid #10b981;
+}
+
+.airac-table-wk-cell {
+    padding: 7px 4px;
+    font-weight: bold;
+    background: #252525;
+}
+
+.airac-table-eff-cell {
+    padding: 7px 4px;
+    color: #4ade80;
+    font-weight: bold;
+}
+
+/* --- Stylizacja Osi Czasu (Timeline) --- */
+.timeline-wrapper {
+    margin-bottom: 25px;
+    padding-top: 15px; /* Przestrzeń na znaczniki dat nad paskiem */
+}
+
+.timeline-header {
+    margin-bottom: 20px;
+}
+
+.timeline-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #aaa;
+    margin: 0;
+}
+
+.timeline-legend {
+    font-size: 0.75em;
+    color: #64748b;
+}
+
+.timeline-bar-container {
+    background: #0f172a;
+    height: 40px;
+    width: 100%;
+    position: relative;
+    border-radius: 4px;
+    border: 1px solid #334155;
+    overflow: visible;
+    margin-top: 25px;
+    margin-bottom: 30px; /* Zwiększone z 15px na 30px, żeby zrobić przestrzeń na badge */
+}
+
+.timeline-progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.2));
+    border-radius: 4px 0 0 4px;
+    overflow: hidden;
+}
+
+.timeline-marker-fri {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #ffffff;
+    z-index: 2;
+}
+
+.timeline-marker-rcs {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #38bdf8;
+    z-index: 1;
+}
+
+.timeline-label-fri,
+.timeline-label-rcs {
+    position: absolute;
+    top: -22px;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: bold;
+    padding: 1px 3px;
+    border-radius: 2px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.timeline-label-fri {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.timeline-label-rcs {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+}
+
+/* --- Poprawka dla znacznika TODAY na dole paska --- */
+.timeline-today-marker {
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    width: 3px;
+    background: #10b981;
+    z-index: 10;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+}
+
+.timeline-today-badge {
+    position: absolute;
+    bottom: -24px; /* Odsunięcie napisu jeszcze niżej pod pasek */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: #000;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 1px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.timeline-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7em;
+    color: #94a3b8;
+    margin-top: 15px; /* Większy gap między paskiem a datami na dole */
+}
+
+.airac-full-table tr:hover {
+    background: rgba(59, 130, 246, 0.05);
+}
+.airac-full-table th {
+    border-bottom: 2px solid #334155;
+}
+
+/* Kontener tabeli dopasowany do okna, bez rozjeżdżania przycisków */
+#table-view-container {
+    height: 45vh; /* Sztywno ustalone na 45vh, co pokazuje ok. 3 cykle i nie psuje układu */
+    overflow-y: auto;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    background-color: #0f172a;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+}
+
+/* Zablokowanie nagłówka tabeli podczas przewijania w boksie */
+#table-view-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Przyciski nawigacyjne po lewej stronie / dół */
+.controls-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 15px auto;
+}
+
+#table-view-container table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #0f172a;
+    z-index: 10;
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4);
+}
+
+/* Kontener tabeli – sztywno na 45vh */
+#table-view-container {
+    height: 45vh;
+    overflow-y: auto;
+    background-color: #0f172a;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.airac-table-full {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed; /* Zapewnia równe szerokości kolumn we wszystkich sekcjach */
+}
+
+/* Odstępy między kartami w tabeli */
+.table-spacer {
+    height: 25px;
+    background: transparent;
+    border: none;
+}
+
+/* Podstawowe style karty cyklu w tabeli */
+.table-cycle-header {
+    background: #1e1e1e;
+    border-top: 1px solid #333;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    padding: 18px 22px 10px 22px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.table-cycle-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.table-cycle-title {
+    margin: 0;
+    color: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.table-cycle-dates {
+    color: #94a3b8;
+    font-size: 0.85em;
+}
+
+/* Nagłówki kolumn wewnątrz karty */
+.table-columns-header {
+    background: #1e1e1e;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    color: #94a3b8;
+    font-size: 0.8em;
+    border-bottom: 1px solid #333;
+}
+
+.table-columns-header th {
+    padding: 10px 15px;
+    text-align: left;
+}
+
+/* Wiersze danych w tabeli */
+.table-row-data {
+    background: #1e1e1e;
+    border-left: 1px solid #333;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #262626;
+    color: #e2e8f0;
+    font-size: 0.9em;
+}
+
+.table-row-data td {
+    padding: 12px 15px;
+}
+
+.table-row-data td.effective-date {
+    color: #4ade80;
+}
+
+/* Ostatni wiersz karty (zaokrąglenia na dole) */
+.table-row-footer {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom: 1px solid #333;
+}
+
+/* Styl dla obecnego (aktualnego) cyklu */
+.table-cycle-current .table-cycle-header,
+.table-cycle-current .table-columns-header,
+.table-cycle-current .table-row-data {
+    border-left: 2px solid #3b82f6;
+    border-right: 2px solid #3b82f6;
+}
+.table-cycle-current .table-cycle-header {
+    border-top: 2px solid #3b82f6;
+}
+.table-cycle-current .table-row-footer {
+    border-bottom: 2px solid #3b82f6;
+}
+
+/* Podświetlenie aktywnego tygodnia */
+.row-active-week {
+    background: #132e25 !important;
+}
+
+.cell-active-week {
+    border-left: 3px solid #10b981;
+    color: #4ade80;
+    font-weight: bold;
+}
+
+/* Badge statusów */
+.badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.badge-completed { background-color: #64748b; }
+.badge-current { background-color: #3b82f6; }
+.badge-upcoming { background-color: #3b82f6; }
+
+.airac-tool-wrapper {
+    width: 100%;
+    max-width: 100% !important;
+    box-sizing: border-box;
+}
+
+.airac-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Odstęp między przyciskiem a listą rozwijaną */
+    margin: 20px 0; /* Margines góra/dół dla zachowania odstępu od innych elementów */
+}
+
+#cycle-jump-select {
+    margin-top:10px;
+    background: #1e293b;
+    color: white;
+    padding: 5px 10px 10px 10px;
+    border: 1px solid #334155;
+    border-radius: 4px;
+}
+
+.airac-toggle-btn {
+    margin-top:10px;
+    background: #334155;
+    color: white;
+    border: none;
+    padding: 5px 10px 10px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#table-view-container {
+    display: none;
+    width: 100%;
+    height: 45vh; /* Upewnij się, że masz ustawioną wysokość dla scrolla */
+    overflow-y: auto;
+    scroll-behavior: smooth; /* Płynne przewijanie */
+}
+
+.airac-full-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #0f172a;
+}
+
+.airac-slider-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.airac-slider-viewport {
+    overflow: hidden;
+    width: 100%;
+    padding: 10px 0;
+}
+
+.airac-reset-container {
+    text-align: center;
+    margin-top: 15px;
 }
 
