@@ -22,6 +22,30 @@ document.addEventListener("DOMContentLoaded", () => {
         return `${d}/${m}`;
     }
 
+    function getDeadlineClass(dateObj, cycleIndex, rowIndex) {
+        const cycle = allCyclesData[cycleIndex];
+        const row = cycle?.rows[rowIndex];
+        if (!dateObj || !row) return '';
+
+        let nextRcsDate = rowIndex + 1 < cycle.rows.length
+            ? cycle.rows[rowIndex + 1]["RCS CutoffObj"]
+            : allCyclesData[cycleIndex + 1]?.rows[0]["RCS CutoffObj"];
+
+        if (!nextRcsDate && row["RCS CutoffObj"]) {
+            nextRcsDate = new Date(row["RCS CutoffObj"]);
+            nextRcsDate.setDate(nextRcsDate.getDate() + 7);
+        }
+
+        const isCurrentWeek = row["RCS CutoffObj"] && nextRcsDate &&
+            today >= row["RCS CutoffObj"] && today < nextRcsDate;
+        if (!isCurrentWeek) return '';
+
+        const diffDays = Math.ceil((dateObj - today) / (1000 * 60 * 60 * 24));
+        if (diffDays >= 0 && diffDays <= 1) return 'deadline-critical';
+        if (diffDays >= 2 && diffDays <= 5) return 'deadline-warning';
+        return '';
+    }
+
     function parseDateString(dateStr) {
         if (!dateStr) return null;
         const parts = dateStr.split("-");
@@ -73,11 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
             });
 
-            let foundIndex = allCyclesData.findIndex(c => {
-                let lastRow = c.rows[c.rows.length - 1];
-                let cycleEndLimit = lastRow["Due Date (Fri)Obj"] ? new Date(lastRow["Due Date (Fri)Obj"]) : c.endDate;
-                cycleEndLimit.setDate(cycleEndLimit.getDate() + 3);
-                return today >= c.startDate && today <= cycleEndLimit;
+            let foundIndex = allCyclesData.findIndex((cycle, index) => {
+                let nextCycle = allCyclesData[index + 1];
+                return today >= cycle.startDate &&
+                    (!nextCycle || today < nextCycle.startDate);
             });
 
             if (foundIndex !== -1) {
@@ -121,6 +144,88 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
+    function getCycleCopyText(cycle) {
+        const headers = ['Wk', 'WH REV', 'DUE (Mon)', 'EH REV / Mail', 'DUE (Fri)', 'RCS', 'EFF'];
+        const rows = cycle.rows.map(row => [
+            row["Wk"],
+            row["WH Revision"],
+            row["Due Date (Mon)"],
+            row["EH Revision / Mail"],
+            row["Due Date (Fri)"],
+            row["RCS Cutoff"],
+            row["Effective Date"]
+        ]);
+
+        const columnWidths = headers.map((header, columnIndex) => Math.max(
+            3,
+            header.length,
+            ...rows.map(row => String(row[columnIndex] ?? '').length)
+        ));
+        const centerCell = (value, width) => {
+            const text = String(value ?? '');
+            const totalPadding = width - text.length;
+            const leftPadding = Math.floor(totalPadding / 2);
+            return `${' '.repeat(leftPadding)}${text}${' '.repeat(totalPadding - leftPadding)}`;
+        };
+        const formatRow = row => row
+            .map((cell, columnIndex) => centerCell(cell, columnWidths[columnIndex]))
+            .join(' | ');
+        const formatSeparator = width => `:${'-'.repeat(width - 2)}:`;
+
+        return [
+            `${cycle.cycleTitle} | ${cycle.dateRange}`,
+            '',
+            `| ${formatRow(headers)} |`,
+            `| ${columnWidths.map(formatSeparator).join(' | ')} |`,
+            ...rows.map(row => `| ${formatRow(row)} |`)
+        ].join('\n');
+    }
+
+    async function copyCycleToClipboard(cycleIndex, button) {
+        const cycle = allCyclesData[cycleIndex];
+        if (!cycle) return;
+
+        const card = button.closest('.airac-slider-card');
+        const table = card?.querySelector('table');
+        const text = getCycleCopyText(cycle);
+        const htmlTable = table?.cloneNode(true);
+        htmlTable?.querySelectorAll('th, td').forEach(cell => {
+            cell.style.textAlign = 'center';
+        });
+        const html = htmlTable?.outerHTML || '';
+
+        try {
+            if (navigator.clipboard?.write && window.ClipboardItem) {
+                await navigator.clipboard.write([
+                    new ClipboardItem({
+                        'text/html': new Blob([html], { type: 'text/html' }),
+                        'text/plain': new Blob([text], { type: 'text/plain' })
+                    })
+                ]);
+            } else if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+            }
+
+            button.classList.add('is-copied');
+            button.title = 'Table copied';
+            setTimeout(() => {
+                button.classList.remove('is-copied');
+                button.title = 'Copy cycle data';
+            }, 1500);
+        } catch (error) {
+            console.error('Nie udało się skopiować danych cyklu:', error);
+        }
+    }
+
     function renderSlider() {
         let html = '';
 
@@ -149,7 +254,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             <h3 class="airac-card-title">${cycle.cycleTitle}</h3>
                             <span class="airac-card-dates">${cycle.dateRange}</span>
                         </div>
-                        <span class="airac-badge ${badgeClass}">${badgeText}</span>
+                        <div class="airac-card-actions">
+                            <button class="airac-copy-btn" type="button" data-cycle-index="${cycle.index}" title="Copy cycle data" aria-label="Copy cycle data">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1Zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2Zm0 16H8V7h11v14Z"/></svg>
+                            </button>
+                            <span class="airac-badge ${badgeClass}">${badgeText}</span>
+                        </div>
                     </div>
                     <table class="airac-table">
                         <thead>
@@ -183,10 +293,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     <tr class="${rowClass}">
                         <td class="airac-table-wk-cell">${row["Wk"]}</td>
                         <td>${row["WH Revision"]}</td>
-                        <td>${row["Due Date (Mon)"]}</td>
+                        <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycle.index, rowIdx)}">${row["Due Date (Mon)"]}</td>
                         <td>${row["EH Revision / Mail"]}</td>
-                        <td>${row["Due Date (Fri)"]}</td>
-                        <td>${row["RCS Cutoff"]}</td>
+                        <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycle.index, rowIdx)}">${row["Due Date (Fri)"]}</td>
+                        <td class="${getDeadlineClass(row["RCS CutoffObj"], cycle.index, rowIdx)}">${row["RCS Cutoff"]}</td>
                         <td class="airac-table-eff-cell">${row["Effective Date"]}</td>
                     </tr>`;
             });
@@ -199,6 +309,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         updateSliderPosition();
     }
+
+    sliderTrack.addEventListener('click', event => {
+        const copyButton = event.target.closest('.airac-copy-btn');
+        if (!copyButton) return;
+
+        copyCycleToClipboard(Number(copyButton.dataset.cycleIndex), copyButton);
+    });
 
     function updateDashboard() {
         const currentCycleData = generateCycleData(activeOffset);
@@ -246,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
             dashboardStatsEl.style.alignItems = 'center';
             
             dashboardStatsEl.innerHTML = `
-                <span>Production Flow &mdash; Active: <span style="color: #4ade80;">${activeCycleTitle} (Wk ${activeGlobalWeek ? activeGlobalWeek["Wk"] : 1})</span></span>
+                <span>Production Flow &mdash; Active: <span class="current-cycle-accent">${activeCycleTitle} (Wk ${activeGlobalWeek ? activeGlobalWeek["Wk"] : 1})</span></span>
                 <span style="color: #888; font-weight: normal; font-size: 0.8em; letter-spacing: 0.5px;">TODAY: ${formattedToday.toUpperCase()}</span>
             `;
         }
@@ -255,6 +372,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index >= 4) return;
             const weekNum = row["Wk"];
             const weekLabelEl = document.getElementById(`week-label-${index + 1}`);
+            const weekBoxEl = weekLabelEl ? weekLabelEl.closest('.stat-week-box') : null;
+            const isActiveWeek = row === activeGlobalWeek;
+
+            if (weekBoxEl) {
+                weekBoxEl.classList.toggle('stat-week-box-active', isActiveWeek);
+            }
+
             if (weekLabelEl) weekLabelEl.innerText = `Week ${weekNum}`;
 
             const evaluateStatus = (targetDate) => {
@@ -264,9 +388,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 if (diffDays < 0) {
                     return { text: "Passed", className: "status-passed" };
-                } else if (diffDays === 0) {
-                    return { text: "Today", className: "status-warning" };
-                } else if (diffDays < 3) {
+                } else if (diffDays <= 1) {
+                    return { text: diffDays === 0 ? "Today" : `${diffDays}d`, className: "status-critical" };
+                } else if (diffDays <= 5) {
                     return { text: `${diffDays}d`, className: "status-warning" };
                 } else {
                     return { text: `${diffDays}d`, className: "status-safe" };
@@ -292,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const timelineContainer = document.getElementById('extended-production-timeline');
         if (timelineContainer) {
             let cycleStart = currentCycleData.rows[0]["RCS CutoffObj"];
-            let cycleEnd = currentCycleData.rows[currentCycleData.rows.length - 1]["Due Date (Fri)Obj"];
+            let cycleEnd = currentCycleData.rows[currentCycleData.rows.length - 1]["Due Date (Mon)Obj"];
             
             let totalDuration = cycleEnd - cycleStart;
 
@@ -317,11 +441,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             timelineContainer.innerHTML = `
                 <div class="timeline-header">
-                    <h3 class="timeline-title" style="font-family: inherit; font-size: 0.85rem; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase; color: #aaa;">
+                    <h3 class="timeline-title">
     PRODUCTION TIMELINE: <span style="color: #fff;">${currentCycleData.cycleTitle}</span>
 </h3>
                     <div class="timeline-legend">
-                        <span style="color: #fff; font-weight: bold;">|</span> Fri Dates &nbsp; | &nbsp; <span style="color: #38bdf8; font-weight: bold;">|</span> RCS Cutoffs &nbsp; | &nbsp; <span style="color: #10b981; font-weight: bold;">&#9650;</span> Today Marker
+                        <span style="color: #ef4444; font-weight: bold;">|</span> Fri Dates &nbsp; | &nbsp; <span style="color: #facc15; font-weight: bold;">|</span> RCS Cutoffs &nbsp; | &nbsp; <span style="color: #10b981; font-weight: bold;">&#9650;</span> Today Marker
                     </div>
                 </div>
                 <div class="timeline-bar-container">
@@ -404,7 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const prevArrow = document.getElementById('slider-prev');
             const nextArrow = document.getElementById('slider-next');
             
-            if (tableContainer.style.display === 'none') {
+            if (getComputedStyle(tableContainer).display === 'none') {
                 sliderContainer.style.display = 'none';
                 tableContainer.style.display = 'block';
                 this.textContent = "Switch to Slider View";
@@ -512,10 +636,10 @@ function renderTableView() {
                 <tr class="${rowClass}">
                     <td class="${wkClass}">${row["Wk"]}</td>
                     <td>${row["WH Revision"]}</td>
-                    <td>${row["Due Date (Mon)"]}</td>
+                    <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycleIdx, rowIdx)}">${row["Due Date (Mon)"]}</td>
                     <td>${row["EH Revision / Mail"]}</td>
-                    <td>${row["Due Date (Fri)"]}</td>
-                    <td>${row["RCS Cutoff"]}</td>
+                    <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycleIdx, rowIdx)}">${row["Due Date (Fri)"]}</td>
+                    <td class="${getDeadlineClass(row["RCS CutoffObj"], cycleIdx, rowIdx)}">${row["RCS Cutoff"]}</td>
                     <td class="effective-date">${row["Effective Date"]}</td>
                 </tr>
             `;

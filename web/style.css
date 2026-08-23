@@ -5,6 +5,21 @@
   font-family: "Segoe UI", sans-serif;
 }
 
+:root {
+    --accent: #007bff;
+    --accent-hover: #0b4b75;
+    --accent-soft: rgba(0, 123, 255, 0.15);
+    --nav-background: #121212;
+}
+
+body.theme-notes,
+body.theme-airac {
+    --accent: #007bff;
+    --accent-hover: #0b4b75;
+    --accent-soft: rgba(0, 123, 255, 0.15);
+    --nav-background: #121212;
+}
+
 
 
 body {
@@ -16,10 +31,10 @@ body {
 
 .top-nav {
     display: flex;
-    background: #121212;
+    background: var(--nav-background);
     padding: 10px 20px;
     gap: 15px;
-    border-bottom: 2px solid #007bff;
+    border-bottom: 2px solid var(--accent);
     align-items: center;
 }
 
@@ -30,6 +45,9 @@ body {
 }
 
 .nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     background: none;
     border: none;
     color: #888;
@@ -38,10 +56,24 @@ body {
     transition: 0.3s;
 }
 
+.tab-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
+.airac-title-icon {
+    width: 28px;
+    height: 28px;
+    fill: #f3f4f6;
+    flex-shrink: 0;
+}
+
 .nav-tab.active {
     font-weight: bold;
-    color: #007bff; 
-    border-bottom: 2px solid #007bff;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
 }
 
 .tab-content {
@@ -95,7 +127,7 @@ body {
 
 #btn-refresh-data:hover {
     background-color: rgba(255, 255, 255, 0.03);
-    border-color: #007acc;
+    border-color: var(--accent);
     color: #e1e1e6;
 }
 
@@ -145,16 +177,6 @@ body {
 
 .app-container .sidebar input:disabled, .app-container .sidebar select:disabled {
   opacity: 0.4;
-}
-
-.app-container .sidebar #stats {
-  margin-top: auto;
-  font-size: 0.8rem;
-  color: #a8a8b3;
-  background: #121214;
-  padding: 8px;
-  border-radius: 6px;
-  text-align: center;
 }
 
 .app-container .airports-panel {
@@ -344,20 +366,6 @@ background: #25252a;
     border-radius: 8px;
     border-left: 5px solid #ff4757; 
     box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-}
-
-.viewer-panel .viewer-header label {
-  font-size: 0.85rem;
-  color: #a8a8b3;
-}
-
-.viewer-panel .viewer-header select {
-  background-color: #121214;
-  border: 1px solid #29292e;
-  color: #e1e1e6;
-  padding: 6px 12px;
-  border-radius: 6px;
-  outline: none;
 }
 
 .viewer-panel .viewer-content {
@@ -623,22 +631,6 @@ position: absolute;
     text-transform: uppercase;
 }
 
-.secondary-button {
-    background-color: #2d2d33;
-    color: #a8a8b3;
-    border: 1px solid #3e3e4a;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    transition: all 0.2s;
-}
-
-.secondary-button:hover {
-    background-color: #3e3e4a;
-    color: #ff6b6b;
-    border-color: #ff6b6b;
-}
-
-
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -686,17 +678,103 @@ position: absolute;
     position: absolute; left: 0;
 }
 
+.release-info {
+    margin-top: 12px;
+    color: #a8a8b3;
+    font-size: 0.85rem;
+}
+
+.release-panel a {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.release-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.release-panel {
+    min-width: 0;
+}
+
+.release-panel + .release-panel {
+    border-left: 1px solid #333;
+    padding-left: 28px;
+}
+
+.release-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    color: #f3f4f6;
+    font-size: 1.65rem;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.release-brand-icon {
+    width: 30px;
+    height: 30px;
+    fill: #e3e3e3;
+    flex-shrink: 0;
+}
+
+.airac-release-icon {
+    fill: #e3e3e3;
+}
+
+.release-version {
+    color: #888;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.release-heading {
+    margin: 28px 0 18px;
+    padding-top: 18px;
+    border-top: 1px solid #333;
+    text-align: center;
+    font-size: 1.25rem;
+}
+
 .popup-content {
     background: #1e1e1e; 
     color: white;
     padding: 25px;
     border-radius: 8px;
-    border-left: 5px solid #2ecc71; 
-    max-width: 600px;
+    border-left: 5px solid transparent;
+    width: calc(100% - 32px);
+    max-width: 1000px;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media (max-width: 720px) {
+    .release-columns {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .release-panel + .release-panel {
+        border-left: none;
+        border-top: 1px solid #333;
+        padding-left: 0;
+        padding-top: 20px;
+    }
+
+    .release-brand {
+        font-size: 1.35rem;
+    }
 }
 
 .popup-content button {
@@ -853,113 +931,6 @@ position: absolute;
     font-size: 14px;
 }
 
-.airac-timeline-container {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-    overflow-x: auto;
-    padding-bottom: 20px;
-}
-
-.cycle-box {
-    flex: 1;
-    min-width: 260px;
-    background: #2a2a2a;
-    border-radius: 8px;
-    padding: 15px;
-    opacity: 0.7;
-}
-
-.prev-cycle, .next-cycle {
-    background: #222;
-}
-
-.active-cycle {
-    flex: 1.2;
-    min-width: 320px;
-    background: #1e293b;
-    border: 2px solid #3b82f6;
-    opacity: 1;
-    position: relative;
-    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-}
-
-.cycle-badge {
-    font-size: 12px;
-    color: #888;
-    font-weight: bold;
-}
-
-.active-badge {
-    color: #60a5fa;
-}
-
-.cycle-box h3 {
-    margin: 5px 0 5px 0;
-    color: #fff;
-}
-
-.cycle-dates {
-    font-size: 13px;
-    color: #94a3b8;
-    margin-bottom: 15px;
-}
-
-.cycle-status {
-    margin-top: 15px;
-    font-size: 12px;
-    background: #333;
-    padding: 8px;
-    border-radius: 4px;
-    text-align: center;
-    color: #aaa;
-}
-
-.today-marker {
-    position: absolute;
-    top: -12px;
-    background: #ef4444;
-    color: white;
-    padding: 2px 8px;
-    font-size: 11px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    transform: translateX(-50%);
-    white-space: nowrap;
-}
-
-.timeline-label {
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #cbd5e1;
-}
-
-.timeline-row {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 10px;
-}
-
-.week-box {
-    flex: 1;
-    background: #334155;
-    text-align: center;
-    padding: 6px 0;
-    font-size: 11px;
-    border-radius: 4px;
-    color: #cbd5e1;
-}
-
-/* Styl dla aktywnego tygodnia w torze produkcyjnym */
-.week-box.current-week {
-    background: #1e3a8a;
-    color: #fff;
-    border: 1px solid #60a5fa;
-    font-weight: bold;
-}
-
 /* Domyślnie wszystkie zawartości zakładek są ukryte */
 .tab-content {
     display: none;
@@ -1010,16 +981,9 @@ position: absolute;
 /* OBECNY CYKL - subtelniejsze, eleganckie podświetlenie bez mocnego blura */
 .cycle-current {
     background: #222530;
-    border: 2px solid #3b82f6;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 10px var(--accent-soft);
     opacity: 1;
-}
-
-/* Przyszłość - lżejsze wyszarzenie */
-.cycle-future {
-    opacity: 0.75;
-    background: #1a1a24;
-    border: 1px solid #444;
 }
 
 /* Przyciski nawigacyjne slidera */
@@ -1036,8 +1000,8 @@ position: absolute;
     margin: 0 10px;
 }
 .slider-btn:hover {
-    background: #3b82f6;
-    border-color: #3b82f6;
+    background: var(--accent);
+    border-color: var(--accent);
     color: #fff;
 }
 
@@ -1066,11 +1030,46 @@ position: absolute;
     border-bottom: 1px solid #333;
     padding-bottom: 10px;
 }
+
+.airac-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.airac-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid #3f3f46;
+    border-radius: 4px;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.airac-copy-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.airac-copy-btn:hover,
+.airac-copy-btn.is-copied {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
 .airac-card-title { font-size: 20px; font-weight: bold; margin: 0; }
 .airac-card-dates { font-size: 14px; color: #9ca3af; }
 .airac-badge { font-size: 11px; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
 .badge-past { background: #374151; color: #9ca3af; }
-.badge-current { background: #3b82f6; color: #fff; }
+.badge-current { background: var(--accent); color: #fff; }
 .badge-future { background: #065f46; color: #6ee7b7; }
 
 /* Większe czcionki i odstępy w tabeli */
@@ -1102,20 +1101,16 @@ position: absolute;
     padding-right: 20px;
 }
 
-.dashboard-timeline {
-    flex: 1;
-    padding-left: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
 .dashboard-title {
     margin-top: 0;
     font-size: 14px;
     color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.current-cycle-accent {
+    color: var(--accent);
 }
 
 /* Siatka 4 tygodni */
@@ -1132,6 +1127,11 @@ position: absolute;
     border-radius: 6px;
     padding: 10px;
     font-size: 12px;
+}
+
+.stat-week-box-active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
 }
 
 .stat-week-title {
@@ -1152,31 +1152,6 @@ position: absolute;
 
 .stat-row strong {
     color: #f3f4f6;
-}
-
-/* Timeline */
-.timeline-track {
-    display: flex;
-    height: 8px;
-    background: #27272a;
-    border-radius: 4px;
-    margin-top: 20px;
-    overflow: hidden;
-}
-
-.timeline-bar {
-    height: 100%;
-    background: #3b82f6;
-    width: 0%;
-    transition: width 0.3s ease;
-}
-
-.timeline-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 8px;
-    font-size: 11px;
-    color: #6b7280;
 }
 
 @media (max-width: 1000px) {
@@ -1200,7 +1175,12 @@ position: absolute;
 }
 
 .status-warning {
-    color: #f59e0b !important; /* Żółty/Pomarańczowy dla < 3 dni i Today */
+    color: #f59e0b !important; /* Żółty/Pomarańczowy dla 2-5 dni */
+    font-weight: bold;
+}
+
+.status-critical {
+    color: #ef4444 !important;
     font-weight: bold;
 }
 
@@ -1208,10 +1188,14 @@ position: absolute;
     color: #10b981 !important; /* Zielony dla pozostałych */
 }
 
-/* Podświetlenie aktywnego tygodnia w tabeli karty */
-.current-week-row {
-    background-color: rgba(16, 185, 129, 0.15) !important; /* Delikatna zielona poświata */
-    border-left: 3px solid #10b981;
+.deadline-warning {
+    color: #facc15 !important;
+    font-weight: bold;
+}
+
+.deadline-critical {
+    color: #ef4444 !important;
+    font-weight: bold;
 }
 
 /* --- Stylizacja tabeli i aktywnego tygodnia --- */
@@ -1237,8 +1221,8 @@ position: absolute;
 
 .airac-table-row-active {
     border-bottom: 1px solid #2a2a2a;
-    background: rgba(16, 185, 129, 0.15);
-    border-left: 3px solid #10b981;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
 }
 
 .airac-table-wk-cell {
@@ -1253,22 +1237,21 @@ position: absolute;
     font-weight: bold;
 }
 
-/* --- Stylizacja Osi Czasu (Timeline) --- */
-.timeline-wrapper {
-    margin-bottom: 25px;
-    padding-top: 15px; /* Przestrzeń na znaczniki dat nad paskiem */
-}
-
 .timeline-header {
     margin-bottom: 20px;
 }
 
+.timeline-container {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+}
+
 .timeline-title {
-    font-size: 0.85rem;
+    font-size: 14px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #aaa;
+    color: #9ca3af;
     margin: 0;
 }
 
@@ -1304,7 +1287,7 @@ position: absolute;
     top: 0;
     width: 2px;
     height: 100%;
-    background: #ffffff;
+    background: #ef4444;
     z-index: 2;
 }
 
@@ -1313,7 +1296,7 @@ position: absolute;
     top: 0;
     width: 2px;
     height: 100%;
-    background: #38bdf8;
+    background: #facc15;
     z-index: 1;
 }
 
@@ -1331,13 +1314,13 @@ position: absolute;
 }
 
 .timeline-label-fri {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
 }
 
 .timeline-label-rcs {
-    color: #38bdf8;
-    background: rgba(56, 189, 248, 0.1);
+    color: #facc15;
+    background: rgba(250, 204, 21, 0.1);
 }
 
 /* --- Poprawka dla znacznika TODAY na dole paska --- */
@@ -1378,6 +1361,11 @@ position: absolute;
 }
 .airac-full-table th {
     border-bottom: 2px solid #334155;
+    text-align: center;
+}
+
+.airac-full-table {
+    table-layout: fixed;
 }
 
 /* Kontener tabeli dopasowany do okna, bez rozjeżdżania przycisków */
@@ -1397,15 +1385,6 @@ position: absolute;
     border-collapse: collapse;
 }
 
-/* Przyciski nawigacyjne po lewej stronie / dół */
-.controls-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin: 15px auto;
-}
-
 #table-view-container table thead th {
     position: sticky;
     top: 0;
@@ -1421,13 +1400,6 @@ position: absolute;
     background-color: #0f172a;
     border-radius: 10px;
     margin-top: 20px;
-}
-
-.airac-table-full {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    table-layout: fixed; /* Zapewnia równe szerokości kolumn we wszystkich sekcjach */
 }
 
 /* Odstępy między kartami w tabeli */
@@ -1478,7 +1450,7 @@ position: absolute;
 
 .table-columns-header th {
     padding: 10px 15px;
-    text-align: left;
+    text-align: center;
 }
 
 /* Wiersze danych w tabeli */
@@ -1493,6 +1465,7 @@ position: absolute;
 
 .table-row-data td {
     padding: 12px 15px;
+    text-align: center;
 }
 
 .table-row-data td.effective-date {
@@ -1510,24 +1483,24 @@ position: absolute;
 .table-cycle-current .table-cycle-header,
 .table-cycle-current .table-columns-header,
 .table-cycle-current .table-row-data {
-    border-left: 2px solid #3b82f6;
-    border-right: 2px solid #3b82f6;
+    border-left: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
 }
 .table-cycle-current .table-cycle-header {
-    border-top: 2px solid #3b82f6;
+    border-top: 2px solid var(--accent);
 }
 .table-cycle-current .table-row-footer {
-    border-bottom: 2px solid #3b82f6;
+    border-bottom: 2px solid var(--accent);
 }
 
 /* Podświetlenie aktywnego tygodnia */
 .row-active-week {
-    background: #132e25 !important;
+    background: var(--accent-soft) !important;
 }
 
 .cell-active-week {
-    border-left: 3px solid #10b981;
-    color: #4ade80;
+    border-left: 3px solid var(--accent);
+    color: var(--accent);
     font-weight: bold;
 }
 
@@ -1542,7 +1515,7 @@ position: absolute;
 }
 
 .badge-completed { background-color: #64748b; }
-.badge-current { background-color: #3b82f6; }
+.badge-current { background-color: var(--accent); }
 .badge-upcoming { background-color: #3b82f6; }
 
 .airac-tool-wrapper {
@@ -1564,13 +1537,13 @@ position: absolute;
     background: #1e293b;
     color: white;
     padding: 5px 10px 10px 10px;
-    border: 1px solid #334155;
+    border: 1px solid var(--accent);
     border-radius: 4px;
 }
 
 .airac-toggle-btn {
     margin-top:10px;
-    background: #334155;
+    background: var(--accent);
     color: white;
     border: none;
     padding: 5px 10px 10px 10px;

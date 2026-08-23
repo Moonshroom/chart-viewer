@@ -10,72 +10,60 @@
 <link rel="icon" type="image/png" sizes="16x16" href="./Favicon/favicon-16x16.png">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
-<body>
+<body class="theme-notes">
     <nav class="top-nav">
         <div class="nav-brand"></div>
-        <button class="nav-tab active" onclick="showTab('note-searcher')">Note Finder</button>
-        <button class="nav-tab" onclick="showTab('AIRAC-calendar')">AIRAC Calendar</button>
+        <button class="nav-tab active" onclick="showTab('note-searcher')">
+            <svg class="tab-icon" viewBox="0 -1100 960 960" aria-hidden="true">
+                <path d="M640-560v-126 126ZM174-132q-20 8-37-4.5T120-170v-560q0-13 7.5-23t20.5-15l212-72 240 84 186-72q20-8 37 4.5t17 33.5v337q-15-23-35.5-42T760-528v-204l-120 46v126q-21 0-41 3.5T560-546v-140l-160-56v523l-226 87Zm26-96 120-46v-468l-120 40v474Zm496.5-32q22.5-20 23.5-60 1-34-22.5-57T640-400q-34 0-57 23t-23 57q0 34 23 57t57 23q34 0 56.5-20ZM640-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T778-238l102 102-56 56-102-102q-18 11-38.5 16.5T640-160ZM320-742v468-468Z"/>
+            </svg>
+            <span>Note Finder</span>
+        </button>
+        <button class="nav-tab" onclick="showTab('AIRAC-calendar')">
+            <svg class="tab-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 16H5V9h14v11ZM5 7V6h14v1H5Z"/>
+            </svg>
+            <span>AIRAC Calendar</span>
+        </button>
     </nav>
 
 <div id="note-searcher" class="tab-content active">
   
 <div id="update-popup" class="popup-overlay">
     <div class="popup-content">
-                    <h1 class="logo-container">
-    <svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -1100 960 960" width="28px" fill="#e3e3e3">
-        <path d="M640-560v-126 126ZM174-132q-20 8-37-4.5T120-170v-560q0-13 7.5-23t20.5-15l212-72 240 84 186-72q20-8 37 4.5t17 33.5v337q-15-23-35.5-42T760-528v-204l-120 46v126q-21 0-41 3.5T560-546v-140l-160-56v523l-226 87Zm26-96 120-46v-468l-120 40v474Zm496.5-32q22.5-20 23.5-60 1-34-22.5-57T640-400q-34 0-57 23t-23 57q0 34 23 57t57 23q34 0 56.5-20ZM640-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T778-238l102 102-56 56-102-102q-18 11-38.5 16.5T640-160ZM320-742v468-468Z"/>
-    </svg> 
-    <span>NOTE-FINDER</span><span style="font-size: 14px; color: #888;"> v 1.0.6 </span>
-</h1><br>
-        <h2>Release Notes</h2   ><br>
-        <ul class="changelog-list">
-            <li>Added support for <b> Approach Charts</b>.</li>
-            <li>Rebuild highlighting system.</li>
-            <li>All PDFs and charts with full integrated Optical Character Recognition (OCR).</li>
-            <li><b>Rebuilt Chart Type & Cell Selectors:</b> Added interactive buttons for all filter types to narrow down the PDF search scope.</li>
-            <li><b>Note Search in All PDFs:</b> Type any text, ICAO or keyword into the global input box to instantly filter and find matching charts containing those OCR notes.</li>
-            <li><b>Database Auto-Loading:</b> The PDF database now loads automatically upon startup without requiring manual reloads.</li>
-                       <div class="matrix-container">
-    <div class="matrix-title">DATABASE COVERAGE MATRIX:</div>
-    <table class="status-matrix">
-        <thead>
-            <tr>
-                <th>CELL</th>
-                <th>SID</th>
-                <th>STAR</th>
-                <th>GNSS-ARRS</th>
-                <th>NOISE</th>
-                <th>RMAC</th>
-                <th>ABP</th>
-                <th>APT</th>
-                <th>APP</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="cell-name">EH1</td>
-                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td>
-            </tr>
-            <tr>
-                <td class="cell-name">EH2</td>
-                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td>
-            </tr>
-            <tr>
-                <td class="cell-name">WH1</td>
-                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟨</td><td>🟨</td><td>🟨</td>
-            </tr>
-            <tr>
-                <td class="cell-name">WH2</td>
-                <td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟩</td><td>🟨</td><td>🟨</td><td>🟨</td>
-            </tr>
-            <tr>
-                <td class="cell-name">WH3</td>
-                <td>🟩</td><td>🟩</td><td>➖</td><td>🟩</td><td>🟩</td><td>🟥</td><td>🟥</td><td>🟥</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-        </ul>
+        <div class="release-columns">
+            <section class="release-panel">
+                <h1 class="release-brand">
+                    <svg class="release-brand-icon" viewBox="0 -1100 960 960" aria-hidden="true">
+                        <path d="M640-560v-126 126ZM174-132q-20 8-37-4.5T120-170v-560q0-13 7.5-23t20.5-15l212-72 240 84 186-72q20-8 37 4.5t17 33.5v337q-15-23-35.5-42T760-528v-204l-120 46v126q-21 0-41 3.5T560-546v-140l-160-56v523l-226 87Zm26-96 120-46v-468l-120 40v474Zm496.5-32q22.5-20 23.5-60 1-34-22.5-57T640-400q-34 0-57 23t-23 57q0 34 23 57t57 23q34 0 56.5-20ZM640-160q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 23-5.5 43.5T778-238l102 102-56 56-102-102q-18 11-38.5 16.5T640-160ZM320-742v468-468Z"/>
+                    </svg>
+                    <span>NOTE-FINDER</span><span class="release-version">v 1.0.6</span>
+                </h1>
+                <h2 class="release-heading">Release Notes</h2>
+                <ul class="changelog-list">
+                    <li>Added support for <b>Approach Charts</b>.</li>
+                    <li>All PDFs and charts with full integrated Optical Character Recognition (OCR).</li>
+                    <li><b>Note Search in All PDFs:</b> Type any text, ICAO or keyword into the global input box to instantly filter and find matching charts containing those OCR notes.</li>
+                </ul>
+                <p class="release-info">The complete database is now based on AIRAC cycle 2607.</p>
+            </section>
+
+            <section class="release-panel">
+                <h1 class="release-brand">
+                    <svg class="release-brand-icon airac-release-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 16H5V9h14v11ZM5 7V6h14v1H5Z"/>
+                    </svg>
+                    <span>AIRAC CALENDAR</span><span class="release-version">v 1.0.0</span>
+                </h1>
+                <h2 class="release-heading">Release Notes</h2>
+                <ul class="changelog-list">
+                    <li><b>Production Flow:</b> Track the current AIRAC cycle, active week and upcoming deadlines.</li>
+                    <li><b>Production Timeline:</b> See RCS cutoffs, Friday due dates and the current day on one timeline.</li>
+                    <li><b>Calendar Slider:</b> Browse past, current and upcoming AIRAC cycles.</li>
+                    <li><a href="#AIRAC-calendar" onclick="showTab('AIRAC-calendar'); document.getElementById('update-popup').style.display='none'; return false;">Open AIRAC Calendar</a></li>
+                </ul>
+            </section>
+        </div>
         <button onclick="document.getElementById('update-popup').style.display='none'">Understand</button>
     </div>
 </div>
@@ -166,9 +154,12 @@
     <div style="padding: 20px; color: white;">
         
         <!-- Nowy, estetyczny nagłówek z ikoną wektorową dopasowaną do Note Findera -->
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+        <div class="airac-page-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+            <svg class="airac-title-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 16H5V9h14v11ZM5 7V6h14v1H5Z"/>
+            </svg>
             <div>
-                <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #f3f4f6;">AIRAC Calendar for Charting</h2>
+                <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #f3f4f6;">AIRAC Calendar for Charting <span style="font-size: 14px; color: #888;"> v 1.0.0 </span></h2>
                 <p class="airac-subtitle" style="margin: 0; font-size: 12px; color: #9ca3af; text-transform: uppercase;">AIRAC-SLIDER</p>
             </div>
         </div>
@@ -182,29 +173,29 @@
                     <!-- Week 1 / 5 -->
                     <div class="stat-week-box">
                         <div class="stat-week-title" id="week-label-1">Week 1 / 5</div>
-                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-1">--</strong></div>
-                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-1">--</strong></div>
+                        <div class="stat-row"><span>Monday Due Date:</span> <strong id="days-mon-1">--</strong></div>
+                        <div class="stat-row"><span>Friday Due Date:</span> <strong id="days-fri-1">--</strong></div>
                         <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-1">--</strong></div>
                     </div>
                     <!-- Week 2 / 6 -->
                     <div class="stat-week-box">
                         <div class="stat-week-title" id="week-label-2">Week 2 / 6</div>
-                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-2">--</strong></div>
-                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-2">--</strong></div>
+                        <div class="stat-row"><span>Monday Due Date:</span> <strong id="days-mon-2">--</strong></div>
+                        <div class="stat-row"><span>Friday Due Date:</span> <strong id="days-fri-2">--</strong></div>
                         <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-2">--</strong></div>
                     </div>
                     <!-- Week 3 / 7 -->
                     <div class="stat-week-box">
                         <div class="stat-week-title" id="week-label-3">Week 3 / 7</div>
-                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-3">--</strong></div>
-                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-3">--</strong></div>
+                        <div class="stat-row"><span>Monday Due Date:</span> <strong id="days-mon-3">--</strong></div>
+                        <div class="stat-row"><span>Friday Due Date:</span> <strong id="days-fri-3">--</strong></div>
                         <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-3">--</strong></div>
                     </div>
                     <!-- Week 4 / 8 -->
                     <div class="stat-week-box">
                         <div class="stat-week-title" id="week-label-4">Week 4 / 8</div>
-                        <div class="stat-row"><span>Mon Due:</span> <strong id="days-mon-4">--</strong></div>
-                        <div class="stat-row"><span>Fri Due:</span> <strong id="days-fri-4">--</strong></div>
+                        <div class="stat-row"><span>Monday Due Date:</span> <strong id="days-mon-4">--</strong></div>
+                        <div class="stat-row"><span>Friday Due Date:</span> <strong id="days-fri-4">--</strong></div>
                         <div class="stat-row"><span>RCS:</span> <strong id="days-rcs-4">--</strong></div>
                     </div>
                 </div> <!-- Koniec stats-grid-weeks -->

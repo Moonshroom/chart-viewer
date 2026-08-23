@@ -161,9 +161,15 @@ function showTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
     
-    document.getElementById(tabId).classList.add('active');
+    const targetTab = document.getElementById(tabId);
+    if (!targetTab) return;
+    targetTab.classList.add('active');
 
-    event.currentTarget.classList.add('active');
+    const targetButton = Array.from(document.querySelectorAll('.nav-tab'))
+        .find(button => button.getAttribute('onclick')?.includes(`'${tabId}'`));
+    if (targetButton) targetButton.classList.add('active');
+    document.body.classList.toggle('theme-airac', tabId === 'AIRAC-calendar');
+    document.body.classList.toggle('theme-notes', tabId === 'note-searcher');
 }
 // --- FILTRY ---
 function initTypeFilter() {
