@@ -72,14 +72,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     return {
                         "Wk": w["wk"],
                         "WH Revision": whDate ? formatDate(whDate) : "",
+                        "WH RevisionObj": whDate,
                         "Due Date (Mon)": dueMonDate ? formatDate(dueMonDate) : "--",
                         "Due Date (Mon)Obj": dueMonDate,
                         "EH Revision / Mail": ehDate ? formatDate(ehDate) : "",
+                        "EH Revision / MailObj": ehDate,
                         "Due Date (Fri)": dueFriDate ? formatDate(dueFriDate) : "--",
                         "Due Date (Fri)Obj": dueFriDate,
                         "RCS Cutoff": rcsDate ? formatDate(rcsDate) : "",
                         "RCS CutoffObj": rcsDate,
-                        "Effective Date": w["effectiveDate"] ? formatDate(parseDateString(w["effectiveDate"]), 'full' ) : ""
+                        "Effective Date": w["effectiveDate"] ? formatDate(parseDateString(w["effectiveDate"]), 'full' ) : "",
+                        "Effective DateObj": w["effectiveDate"] ? parseDateString(w["effectiveDate"]) : null
                     };
                 });
 
@@ -292,12 +295,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += `
                     <tr class="${rowClass}">
                         <td class="airac-table-wk-cell">${row["Wk"]}</td>
-                        <td>${row["WH Revision"]}</td>
-                        <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycle.index, rowIdx)}">${row["Due Date (Mon)"]}</td>
-                        <td>${row["EH Revision / Mail"]}</td>
-                        <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycle.index, rowIdx)}">${row["Due Date (Fri)"]}</td>
-                        <td class="${getDeadlineClass(row["RCS CutoffObj"], cycle.index, rowIdx)}">${row["RCS Cutoff"]}</td>
-                        <td class="airac-table-eff-cell">${row["Effective Date"]}</td>
+                        <td class="${row["WH RevisionObj"] < today ? 'date-passed' : ''}">${row["WH Revision"]}</td>
+                        <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycle.index, rowIdx)} ${row["Due Date (Mon)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Mon)"]}</td>
+                        <td class="${row["EH Revision / MailObj"] < today ? 'date-passed' : ''}">${row["EH Revision / Mail"]}</td>
+                        <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycle.index, rowIdx)} ${row["Due Date (Fri)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Fri)"]}</td>
+                        <td class="${getDeadlineClass(row["RCS CutoffObj"], cycle.index, rowIdx)} ${row["RCS CutoffObj"] < today ? 'date-passed' : ''}">${row["RCS Cutoff"]}</td>
+                        <td class="airac-table-eff-cell ${row["Effective DateObj"] < today ? 'date-passed' : ''}">${row["Effective Date"]}</td>
                     </tr>`;
             });
 
@@ -357,15 +360,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const dashboardStatsEl = document.querySelector('.dashboard-stats .dashboard-title');
         if (dashboardStatsEl) {
-            const formattedToday = formatDate(today, 'full');
-            dashboardStatsEl.style.display = 'flex';
-            dashboardStatsEl.style.justifyContent = 'space-between';
-            dashboardStatsEl.style.alignItems = 'center';
-            
-            dashboardStatsEl.innerHTML = `
-                <span>Production Flow &mdash; Active: <span class="current-cycle-accent">${activeCycleTitle} (Wk ${activeGlobalWeek ? activeGlobalWeek["Wk"] : 1})</span></span>
-                <span style="color: #888; font-weight: normal; font-size: 0.8em; letter-spacing: 0.5px;">TODAY: ${formattedToday.toUpperCase()}</span>
-            `;
+            dashboardStatsEl.innerText = 'Production Flow';
+        }
+        const dashboardCycleInfoEl = document.getElementById('dashboard-cycle-info');
+        if (dashboardCycleInfoEl) {
+            const displayedWeek = currentCycleData.rows[0]?.["Wk"] ?? 1;
+            dashboardCycleInfoEl.innerText = `${currentCycleData.cycleTitle} - Week ${displayedWeek}`;
         }
 
         currentCycleData.rows.forEach((row, index) => {
@@ -379,7 +379,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 weekBoxEl.classList.toggle('stat-week-box-active', isActiveWeek);
             }
 
-            if (weekLabelEl) weekLabelEl.innerText = `Week ${weekNum}`;
+            if (weekLabelEl) {
+                weekLabelEl.innerText = `Week ${weekNum}`;
+                weekLabelEl.classList.toggle('stat-week-title-active', isActiveWeek);
+            }
 
             const evaluateStatus = (targetDate) => {
                 if (!targetDate) return { text: "--", className: "" };
@@ -389,11 +392,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (diffDays < 0) {
                     return { text: "Passed", className: "status-passed" };
                 } else if (diffDays <= 1) {
-                    return { text: diffDays === 0 ? "Today" : `${diffDays}d`, className: "status-critical" };
+                    return { text: diffDays === 0 ? "Today" : `${diffDays}d left`, className: "status-critical" };
                 } else if (diffDays <= 5) {
-                    return { text: `${diffDays}d`, className: "status-warning" };
+                    return { text: `${diffDays}d left`, className: "status-warning" };
                 } else {
-                    return { text: `${diffDays}d`, className: "status-safe" };
+                    return { text: `${diffDays}d left`, className: "status-safe" };
                 }
             };
 
@@ -408,9 +411,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.className = evalObj.className;
             };
 
+            const applyDateToElement = (elemId, dateObj) => {
+                const el = document.getElementById(elemId);
+                if (!el) return;
+                el.innerText = dateObj ? formatDate(dateObj, 'full') : '--';
+                el.className = dateObj && dateObj < today ? 'date-passed' : '';
+            };
+
             applyStatusToElement(`days-mon-${index + 1}`, monEval);
             applyStatusToElement(`days-fri-${index + 1}`, friEval);
             applyStatusToElement(`days-rcs-${index + 1}`, rcsEval);
+            applyDateToElement(`date-mon-${index + 1}`, row["Due Date (Mon)Obj"]);
+            applyDateToElement(`date-fri-${index + 1}`, row["Due Date (Fri)Obj"]);
+            applyDateToElement(`date-rcs-${index + 1}`, row["RCS CutoffObj"]);
         });
 
         const timelineContainer = document.getElementById('extended-production-timeline');
@@ -426,27 +439,28 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             let markers = '';
-            currentCycleData.rows.forEach(row => {
-                let friPct = getPercent(row["Due Date (Fri)Obj"]);
-                let rcsPct = getPercent(row["RCS CutoffObj"]);
-                
-                markers += `<div class="timeline-marker-fri" style="left: ${friPct}%;"></div>`;
-                markers += `<div class="timeline-label-fri" style="left: ${friPct}%;">${row["Due Date (Fri)"]}</div>`;
-
-                markers += `<div class="timeline-marker-rcs" style="left: ${rcsPct}%;"></div>`;
-                markers += `<div class="timeline-label-rcs" style="left: ${rcsPct}%;">${row["RCS Cutoff"]}</div>`;
+            currentCycleData.rows.forEach((row, rowIndex) => {
+                const weekStart = getPercent(row["RCS CutoffObj"]);
+                const weekEnd = getPercent(row["Due Date (Mon)Obj"]);
+                const marker = (type, dateObj, label, dateText) => {
+                    if (!dateObj) return '';
+                    const passedClass = dateObj < today ? ' timeline-marker-passed' : '';
+                    return `<div class="timeline-marker timeline-marker-${type}${passedClass}" style="--week-color: var(--timeline-week-${rowIndex % 2 === 0 ? 'a' : 'b'}); left: ${getPercent(dateObj)}%;"><span>${label}</span><small>${dateText}</small></div>`;
+                };
+                const weekTone = rowIndex % 2 === 0 ? 'timeline-week-tone-a' : 'timeline-week-tone-b';
+                const weekColor = rowIndex % 2 === 0 ? 'a' : 'b';
+                markers += `<div class="timeline-week ${weekTone}" style="--week-color: var(--timeline-week-${weekColor}); left: ${weekStart}%; width: ${Math.max(weekEnd - weekStart, 0)}%;"><span>Week ${row["Wk"]}</span></div>`;
+                markers += marker('rcs', row["RCS CutoffObj"], 'RCS', row["RCS Cutoff"]);
+                markers += marker('fri', row["Due Date (Fri)Obj"], 'Due Date Friday', row["Due Date (Fri)"]);
+                markers += marker('mon', row["Due Date (Mon)Obj"], 'Due Date Monday', row["Due Date (Mon)"]);
             });
 
             let todayPct = getPercent(today);
 
             timelineContainer.innerHTML = `
                 <div class="timeline-header">
-                    <h3 class="timeline-title">
-    PRODUCTION TIMELINE: <span style="color: #fff;">${currentCycleData.cycleTitle}</span>
-</h3>
-                    <div class="timeline-legend">
-                        <span style="color: #ef4444; font-weight: bold;">|</span> Fri Dates &nbsp; | &nbsp; <span style="color: #facc15; font-weight: bold;">|</span> RCS Cutoffs &nbsp; | &nbsp; <span style="color: #10b981; font-weight: bold;">&#9650;</span> Today Marker
-                    </div>
+                    <h3 class="timeline-title">Production Timeline</h3>
+                    <div class="timeline-today-above">TODAY: ${formatDate(today, 'full').toUpperCase()}</div>
                 </div>
                 <div class="timeline-bar-container">
                     <div class="timeline-progress-fill" style="width: ${todayPct}%;"></div>
@@ -457,7 +471,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="timeline-footer">
                     <span>START: ${formatDate(cycleStart, 'full')}</span>
-                    <span style="color: #4ade80;">TODAY: ${formatDate(today, 'full')}</span>
                     <span>END: ${formatDate(cycleEnd, 'full')}</span>
                 </div>
             `;
@@ -635,12 +648,12 @@ function renderTableView() {
             tbody.innerHTML += `
                 <tr class="${rowClass}">
                     <td class="${wkClass}">${row["Wk"]}</td>
-                    <td>${row["WH Revision"]}</td>
-                    <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycleIdx, rowIdx)}">${row["Due Date (Mon)"]}</td>
-                    <td>${row["EH Revision / Mail"]}</td>
-                    <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycleIdx, rowIdx)}">${row["Due Date (Fri)"]}</td>
-                    <td class="${getDeadlineClass(row["RCS CutoffObj"], cycleIdx, rowIdx)}">${row["RCS Cutoff"]}</td>
-                    <td class="effective-date">${row["Effective Date"]}</td>
+                    <td class="${row["WH RevisionObj"] < today ? 'date-passed' : ''}">${row["WH Revision"]}</td>
+                    <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycleIdx, rowIdx)} ${row["Due Date (Mon)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Mon)"]}</td>
+                    <td class="${row["EH Revision / MailObj"] < today ? 'date-passed' : ''}">${row["EH Revision / Mail"]}</td>
+                    <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycleIdx, rowIdx)} ${row["Due Date (Fri)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Fri)"]}</td>
+                    <td class="${getDeadlineClass(row["RCS CutoffObj"], cycleIdx, rowIdx)} ${row["RCS CutoffObj"] < today ? 'date-passed' : ''}">${row["RCS Cutoff"]}</td>
+                    <td class="effective-date ${row["Effective DateObj"] < today ? 'date-passed' : ''}">${row["Effective Date"]}</td>
                 </tr>
             `;
         });

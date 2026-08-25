@@ -1109,6 +1109,13 @@ position: absolute;
     letter-spacing: 0.5px;
 }
 
+.dashboard-cycle-info {
+    color: #f3f4f6;
+    font-size: 24px;
+    font-weight: bold;
+    margin: -4px 0 12px;
+}
+
 .current-cycle-accent {
     color: var(--accent);
 }
@@ -1136,22 +1143,48 @@ position: absolute;
 
 .stat-week-title {
     font-weight: bold;
-    color: #3b82f6;
+    color: #f3f4f6;
     margin-bottom: 8px;
     text-align: center;
     border-bottom: 1px solid #2f2f35;
     padding-bottom: 4px;
 }
 
+.stat-week-title-active {
+    color: #3b82f6;
+}
+
 .stat-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 4px;
+    align-items: center;
+    min-height: 42px;
+    padding: 5px 0;
     color: #9ca3af;
+    border-bottom: 1px solid #36363d;
+}
+
+.stat-row:last-child {
+    border-bottom: 0;
 }
 
 .stat-row strong {
     color: #f3f4f6;
+    text-align: right;
+}
+
+.stat-row strong small {
+    display: block;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: normal;
+    margin-top: 2px;
+}
+
+.date-passed,
+.date-passed small,
+.status-passed {
+    color: #64748b !important;
 }
 
 @media (max-width: 1000px) {
@@ -1171,7 +1204,7 @@ position: absolute;
 
 /* Kolory statusów w dashboardzie */
 .status-passed {
-    color: #ef4444 !important; /* Czerwony dla minionych */
+    color: #64748b !important;
 }
 
 .status-warning {
@@ -1238,12 +1271,18 @@ position: absolute;
 }
 
 .timeline-header {
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
 }
 
 .timeline-container {
     padding-left: 28px !important;
     padding-right: 28px !important;
+    --timeline-week-a: #4f46e5;
+    --timeline-week-b: #a5b4fc;
 }
 
 .timeline-title {
@@ -1255,9 +1294,21 @@ position: absolute;
     margin: 0;
 }
 
-.timeline-legend {
-    font-size: 0.75em;
-    color: #64748b;
+.timeline-today-above {
+    position: static;
+    grid-column: 2;
+    grid-row: 1;
+    transform: none;
+    color: #4ade80;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 0.6px;
+    margin-top: 0;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: #10b981;
+    color: #001b12;
+    white-space: nowrap;
 }
 
 .timeline-bar-container {
@@ -1268,7 +1319,7 @@ position: absolute;
     border-radius: 4px;
     border: 1px solid #334155;
     overflow: visible;
-    margin-top: 25px;
+    margin-top: 48px;
     margin-bottom: 30px; /* Zwiększone z 15px na 30px, żeby zrobić przestrzeń na badge */
 }
 
@@ -1300,50 +1351,142 @@ position: absolute;
     z-index: 1;
 }
 
-.timeline-label-fri,
-.timeline-label-rcs {
+.timeline-week {
     position: absolute;
-    top: -22px;
-    transform: translateX(-50%);
-    font-size: 9px;
-    font-weight: bold;
-    padding: 1px 3px;
-    border-radius: 2px;
-    white-space: nowrap;
+    top: 0;
+    height: 100%;
+    border-left: 1px solid rgba(148, 163, 184, 0.5);
+    border-right: 1px solid rgba(148, 163, 184, 0.5);
+    z-index: 1;
     pointer-events: none;
 }
 
-.timeline-label-fri {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
+.timeline-week-tone-a {
+    background: color-mix(in srgb, var(--timeline-week-a) 24%, transparent);
 }
 
-.timeline-label-rcs {
-    color: #facc15;
-    background: rgba(250, 204, 21, 0.1);
+.timeline-week-tone-b {
+    background: color-mix(in srgb, var(--timeline-week-b) 24%, transparent);
 }
 
-/* --- Poprawka dla znacznika TODAY na dole paska --- */
+.timeline-week span {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 8px);
+    transform: translateX(-50%);
+    color: #f3f4f6;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: var(--week-color);
+}
+
+.timeline-marker {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 3;
+}
+
+.timeline-marker::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 14px;
+    height: 10px;
+    transform: translateX(-50%);
+    background: currentColor;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.timeline-marker span,
+.timeline-marker small {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.timeline-marker span {
+    top: -14px;
+    font-size: 8px;
+}
+
+.timeline-marker small {
+    top: -28px;
+    font-size: 9px;
+    padding: 1px 3px;
+    border-radius: 2px;
+}
+
+.timeline-marker-fri { color: #ef4444; }
+.timeline-marker-fri span,
+.timeline-marker-fri small { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+.timeline-marker-rcs { color: #facc15; }
+.timeline-marker-rcs span,
+.timeline-marker-rcs small { color: #facc15; background: rgba(250, 204, 21, 0.1); }
+.timeline-marker-fri,
+.timeline-marker-rcs,
+.timeline-marker-mon {
+    color: var(--week-color);
+}
+.timeline-marker-fri span,
+.timeline-marker-fri small,
+.timeline-marker-rcs span,
+.timeline-marker-rcs small,
+.timeline-marker-mon span,
+.timeline-marker-mon small {
+    color: var(--week-color);
+    background: color-mix(in srgb, var(--week-color) 12%, transparent);
+}
+.timeline-marker-mon {
+    top: auto;
+    bottom: 0;
+}
+.timeline-marker-mon::before {
+    top: auto;
+    bottom: 0;
+    clip-path: polygon(0 100%, 100% 100%, 50% 0);
+}
+.timeline-marker-mon span { top: 12px; }
+.timeline-marker-mon small { top: 25px; }
+.timeline-marker-passed { color: #64748b !important; }
+.timeline-marker-passed span,
+.timeline-marker-passed small { color: #64748b !important; background: rgba(100, 116, 139, 0.12); }
+
+/* --- Znacznik TODAY pod paskiem --- */
 .timeline-today-marker {
     position: absolute;
-    top: -6px;
-    bottom: -6px;
+    top: 0;
+    left: 0;
     width: 3px;
+    height: 100%;
+    transform: translateX(-50%);
     background: #10b981;
-    z-index: 10;
+    z-index: 2;
     box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
 }
 
 .timeline-today-badge {
     position: absolute;
-    bottom: -24px; /* Odsunięcie napisu jeszcze niżej pod pasek */
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    display: flex;
+    width: 48px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
     background: #10b981;
-    color: #000;
+    color: #001b12;
     font-size: 9px;
     font-weight: bold;
-    padding: 1px 4px;
+    writing-mode: horizontal-tb;
     border-radius: 3px;
     white-space: nowrap;
 }
@@ -1353,7 +1496,7 @@ position: absolute;
     justify-content: space-between;
     font-size: 0.7em;
     color: #94a3b8;
-    margin-top: 15px; /* Większy gap między paskiem a datami na dole */
+    margin-top: 45px;
 }
 
 .airac-full-table tr:hover {
