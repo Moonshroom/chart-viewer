@@ -1,0 +1,422 @@
+[
+    {
+        "date": "2026-01-01",
+        "name": "Nowy Rok",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-01-06",
+        "name": "Swieto Trzech Kroli",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-04-05",
+        "name": "Pierwszy dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-04-06",
+        "name": "Drugi dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-05-01",
+        "name": "Swieto Pracy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-05-03",
+        "name": "Swieto Konstytucji 3 Maja",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-05-24",
+        "name": "Zielone Swiatki",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-06-04",
+        "name": "Boze Cialo",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-08-15",
+        "name": "Wniebowziecie Najswietszej Maryi Panny",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-11-01",
+        "name": "Wszystkich Swietych",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-11-11",
+        "name": "Narodowe Swieto Niepodleglosci",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-12-24",
+        "name": "Wigilia Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-12-25",
+        "name": "Pierwszy dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2026-12-26",
+        "name": "Drugi dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-01-01",
+        "name": "Nowy Rok",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-01-06",
+        "name": "Swieto Trzech Kroli",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-03-28",
+        "name": "Pierwszy dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-03-29",
+        "name": "Drugi dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-05-01",
+        "name": "Swieto Pracy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-05-03",
+        "name": "Swieto Konstytucji 3 Maja",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-05-16",
+        "name": "Zielone Swiatki",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-05-27",
+        "name": "Boze Cialo",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-08-15",
+        "name": "Wniebowziecie Najswietszej Maryi Panny",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-11-01",
+        "name": "Wszystkich Swietych",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-11-11",
+        "name": "Narodowe Swieto Niepodleglosci",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-12-24",
+        "name": "Wigilia Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-12-25",
+        "name": "Pierwszy dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2027-12-26",
+        "name": "Drugi dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-01-01",
+        "name": "Nowy Rok",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-01-06",
+        "name": "Swieto Trzech Kroli",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-04-16",
+        "name": "Pierwszy dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-04-17",
+        "name": "Drugi dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-05-01",
+        "name": "Swieto Pracy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-05-03",
+        "name": "Swieto Konstytucji 3 Maja",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-06-04",
+        "name": "Zielone Swiatki",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-06-15",
+        "name": "Boze Cialo",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-08-15",
+        "name": "Wniebowziecie Najswietszej Maryi Panny",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-11-01",
+        "name": "Wszystkich Swietych",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-11-11",
+        "name": "Narodowe Swieto Niepodleglosci",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-12-24",
+        "name": "Wigilia Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-12-25",
+        "name": "Pierwszy dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2028-12-26",
+        "name": "Drugi dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-01-01",
+        "name": "Nowy Rok",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-01-06",
+        "name": "Swieto Trzech Kroli",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-04-01",
+        "name": "Pierwszy dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-04-02",
+        "name": "Drugi dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-05-01",
+        "name": "Swieto Pracy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-05-03",
+        "name": "Swieto Konstytucji 3 Maja",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-05-20",
+        "name": "Zielone Swiatki",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-05-31",
+        "name": "Boze Cialo",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-08-15",
+        "name": "Wniebowziecie Najswietszej Maryi Panny",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-11-01",
+        "name": "Wszystkich Swietych",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-11-11",
+        "name": "Narodowe Swieto Niepodleglosci",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-12-24",
+        "name": "Wigilia Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-12-25",
+        "name": "Pierwszy dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2029-12-26",
+        "name": "Drugi dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-01-01",
+        "name": "Nowy Rok",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-01-06",
+        "name": "Swieto Trzech Kroli",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-04-21",
+        "name": "Pierwszy dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-04-22",
+        "name": "Drugi dzien Wielkiej Nocy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-05-01",
+        "name": "Swieto Pracy",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-05-03",
+        "name": "Swieto Konstytucji 3 Maja",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-06-09",
+        "name": "Zielone Swiatki",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-06-20",
+        "name": "Boze Cialo",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-08-15",
+        "name": "Wniebowziecie Najswietszej Maryi Panny",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-11-01",
+        "name": "Wszystkich Swietych",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-11-11",
+        "name": "Narodowe Swieto Niepodleglosci",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-12-24",
+        "name": "Wigilia Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-12-25",
+        "name": "Pierwszy dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    },
+    {
+        "date": "2030-12-26",
+        "name": "Drugi dzien Bozego Narodzenia",
+        "type": "public-holiday",
+        "isWorkingDay": false
+    }
+]

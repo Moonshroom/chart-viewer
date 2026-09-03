@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     today.setHours(0, 0, 0, 0);
 
     let allCyclesData = [];
+    let holidays = [];
     let currentCycleOffset = 0;
     let activeOffset = 0;
     let minOffset = -6;
@@ -53,17 +54,36 @@ document.addEventListener("DOMContentLoaded", () => {
         return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
     }
 
+    function getHolidayInfo(dateObj) {
+        if (!dateObj) return null;
+        const dateKey = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
+        return holidays.find(holiday => holiday.date === dateKey) || null;
+    }
+
+    function getHolidayClass(dateObj) {
+        return getHolidayInfo(dateObj) ? ' holiday-date' : '';
+    }
+
+    function getHolidayTitle(dateObj) {
+        const holiday = getHolidayInfo(dateObj);
+        return holiday ? ` title="${holiday.name}"` : '';
+    }
+
     async function loadDataAndInit() {
         try {
-            const response = await fetch('AIRAC_Calendar.json');
+            const [response, holidaysResponse] = await Promise.all([
+                fetch('AIRAC_Calendar.json'),
+                fetch('Polish_Holidays.json')
+            ]);
             const rawData = await response.json();
+            holidays = await holidaysResponse.json();
 
             allCyclesData = rawData.map((item, index) => {
                 let cycleNumStr = item.cycle;
                 let rows = item.weeks.map(w => {
                     let dueFriDate = parseDateString(w["DUE (FRI)"]);
-                    let dueMonDate = dueFriDate ? new Date(dueFriDate) : null;
-                    if (dueMonDate) dueMonDate.setDate(dueMonDate.getDate() + 3);
+                    let dueTueDate = dueFriDate ? new Date(dueFriDate) : null;
+                    if (dueTueDate) dueTueDate.setDate(dueTueDate.getDate() + 4);
 
                     let whDate = parseDateString(w["WH REV"]);
                     let ehDate = parseDateString(w["EH REV/MAIL"]);
@@ -73,8 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Wk": w["wk"],
                         "WH Revision": whDate ? formatDate(whDate) : "",
                         "WH RevisionObj": whDate,
-                        "Due Date (Mon)": dueMonDate ? formatDate(dueMonDate) : "--",
-                        "Due Date (Mon)Obj": dueMonDate,
+                        "Due Date (Tue)": dueTueDate ? formatDate(dueTueDate) : "--",
+                        "Due Date (Tue)Obj": dueTueDate,
                         "EH Revision / Mail": ehDate ? formatDate(ehDate) : "",
                         "EH Revision / MailObj": ehDate,
                         "Due Date (Fri)": dueFriDate ? formatDate(dueFriDate) : "--",
@@ -148,11 +168,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getCycleCopyText(cycle) {
-        const headers = ['Wk', 'WH REV', 'DUE (Mon)', 'EH REV / Mail', 'DUE (Fri)', 'RCS', 'EFF'];
+        const headers = ['Wk', 'WH REV', 'DUE (Tuesday)', 'EH REV / Mail', 'DUE (Friday)', 'RCS', 'EFF'];
         const rows = cycle.rows.map(row => [
             row["Wk"],
             row["WH Revision"],
-            row["Due Date (Mon)"],
+            row["Due Date (Tue)"],
             row["EH Revision / Mail"],
             row["Due Date (Fri)"],
             row["RCS Cutoff"],
@@ -269,9 +289,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             <tr>
                                 <th>Wk</th>
                                 <th>WH REV</th>
-                                <th>DUE (Mon)</th>
+                                <th>DUE (Tuesday)</th>
                                 <th>EH REV / Mail</th>
-                                <th>DUE (Fri)</th>
+                                <th>DUE (Friday)</th>
                                 <th>RCS</th>
                                 <th>EFF</th>
                             </tr>
@@ -295,12 +315,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += `
                     <tr class="${rowClass}">
                         <td class="airac-table-wk-cell">${row["Wk"]}</td>
-                        <td class="${row["WH RevisionObj"] < today ? 'date-passed' : ''}">${row["WH Revision"]}</td>
-                        <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycle.index, rowIdx)} ${row["Due Date (Mon)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Mon)"]}</td>
-                        <td class="${row["EH Revision / MailObj"] < today ? 'date-passed' : ''}">${row["EH Revision / Mail"]}</td>
-                        <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycle.index, rowIdx)} ${row["Due Date (Fri)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Fri)"]}</td>
-                        <td class="${getDeadlineClass(row["RCS CutoffObj"], cycle.index, rowIdx)} ${row["RCS CutoffObj"] < today ? 'date-passed' : ''}">${row["RCS Cutoff"]}</td>
-                        <td class="airac-table-eff-cell ${row["Effective DateObj"] < today ? 'date-passed' : ''}">${row["Effective Date"]}</td>
+                        <td class="${row["WH RevisionObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["WH RevisionObj"])}"${getHolidayTitle(row["WH RevisionObj"])}>${row["WH Revision"]}</td>
+                        <td class="${getDeadlineClass(row["Due Date (Tue)Obj"], cycle.index, rowIdx)} ${row["Due Date (Tue)Obj"] < today ? 'date-passed' : ''}${getHolidayClass(row["Due Date (Tue)Obj"])}"${getHolidayTitle(row["Due Date (Tue)Obj"])}>${row["Due Date (Tue)"]}</td>
+                        <td class="${row["EH Revision / MailObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["EH Revision / MailObj"])}"${getHolidayTitle(row["EH Revision / MailObj"])}>${row["EH Revision / Mail"]}</td>
+                        <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycle.index, rowIdx)} ${row["Due Date (Fri)Obj"] < today ? 'date-passed' : ''}${getHolidayClass(row["Due Date (Fri)Obj"])}"${getHolidayTitle(row["Due Date (Fri)Obj"])}>${row["Due Date (Fri)"]}</td>
+                        <td class="${getDeadlineClass(row["RCS CutoffObj"], cycle.index, rowIdx)} ${row["RCS CutoffObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["RCS CutoffObj"])}"${getHolidayTitle(row["RCS CutoffObj"])}>${row["RCS Cutoff"]}</td>
+                        <td class="airac-table-eff-cell ${row["Effective DateObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["Effective DateObj"])}"${getHolidayTitle(row["Effective DateObj"])}>${row["Effective Date"]}</td>
                     </tr>`;
             });
 
@@ -400,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             };
 
-            const monEval = evaluateStatus(row["Due Date (Mon)Obj"]);
+            const tueEval = evaluateStatus(row["Due Date (Tue)Obj"]);
             const friEval = evaluateStatus(row["Due Date (Fri)Obj"]);
             const rcsEval = evaluateStatus(row["RCS CutoffObj"]);
 
@@ -418,10 +438,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 el.className = dateObj && dateObj < today ? 'date-passed' : '';
             };
 
-            applyStatusToElement(`days-mon-${index + 1}`, monEval);
+            applyStatusToElement(`days-tue-${index + 1}`, tueEval);
             applyStatusToElement(`days-fri-${index + 1}`, friEval);
             applyStatusToElement(`days-rcs-${index + 1}`, rcsEval);
-            applyDateToElement(`date-mon-${index + 1}`, row["Due Date (Mon)Obj"]);
+            applyDateToElement(`date-tue-${index + 1}`, row["Due Date (Tue)Obj"]);
             applyDateToElement(`date-fri-${index + 1}`, row["Due Date (Fri)Obj"]);
             applyDateToElement(`date-rcs-${index + 1}`, row["RCS CutoffObj"]);
         });
@@ -429,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const timelineContainer = document.getElementById('extended-production-timeline');
         if (timelineContainer) {
             let cycleStart = currentCycleData.rows[0]["RCS CutoffObj"];
-            let cycleEnd = currentCycleData.rows[currentCycleData.rows.length - 1]["Due Date (Mon)Obj"];
+            let cycleEnd = currentCycleData.rows[currentCycleData.rows.length - 1]["Due Date (Tue)Obj"];
             
             let totalDuration = cycleEnd - cycleStart;
 
@@ -438,24 +458,68 @@ document.addEventListener("DOMContentLoaded", () => {
                 return Math.min(Math.max(((dateObj - cycleStart) / totalDuration) * 100, 0), 100);
             };
 
+            const marker = (type, dateObj, label, dateText, title = '', weekColor = 'a', rangeEnd = null) => {
+                if (!dateObj) return '';
+                const passedClass = dateObj < today ? ' timeline-marker-passed' : '';
+                const titleAttribute = title ? ` title="${title}"` : '';
+                const rangeWidth = rangeEnd ? Math.max(getPercent(rangeEnd) - getPercent(dateObj), 0) : 0;
+                const rangeStyle = rangeEnd ? ` width: ${rangeWidth}%; transform: translateY(-50%);` : '';
+                const rangeClass = rangeEnd ? ' timeline-marker-range' : '';
+                return `<div class="timeline-marker timeline-marker-${type}${rangeClass}${passedClass}"${titleAttribute} style="--week-color: var(--timeline-week-${weekColor}); left: ${getPercent(dateObj)}%;${rangeStyle}"><span>${label}</span><small>${dateText}</small></div>`;
+            };
+
             let markers = '';
             currentCycleData.rows.forEach((row, rowIndex) => {
                 const weekStart = getPercent(row["RCS CutoffObj"]);
-                const weekEnd = getPercent(row["Due Date (Mon)Obj"]);
-                const marker = (type, dateObj, label, dateText) => {
-                    if (!dateObj) return '';
-                    const passedClass = dateObj < today ? ' timeline-marker-passed' : '';
-                    return `<div class="timeline-marker timeline-marker-${type}${passedClass}" style="--week-color: var(--timeline-week-${rowIndex % 2 === 0 ? 'a' : 'b'}); left: ${getPercent(dateObj)}%;"><span>${label}</span><small>${dateText}</small></div>`;
-                };
+                const weekEnd = getPercent(row["Due Date (Tue)Obj"]);
                 const weekTone = rowIndex % 2 === 0 ? 'timeline-week-tone-a' : 'timeline-week-tone-b';
                 const weekColor = rowIndex % 2 === 0 ? 'a' : 'b';
                 markers += `<div class="timeline-week ${weekTone}" style="--week-color: var(--timeline-week-${weekColor}); left: ${weekStart}%; width: ${Math.max(weekEnd - weekStart, 0)}%;"><span>Week ${row["Wk"]}</span></div>`;
-                markers += marker('rcs', row["RCS CutoffObj"], 'RCS', row["RCS Cutoff"]);
-                markers += marker('fri', row["Due Date (Fri)Obj"], 'Due Date Friday', row["Due Date (Fri)"]);
-                markers += marker('mon', row["Due Date (Mon)Obj"], 'Due Date Monday', row["Due Date (Mon)"]);
+                markers += marker('rcs', row["RCS CutoffObj"], 'RCS', row["RCS Cutoff"], '', weekColor);
+                markers += marker('fri', row["Due Date (Fri)Obj"], 'Due Date Friday', row["Due Date (Fri)"], '', weekColor);
+                markers += marker('tue', row["Due Date (Tue)Obj"], 'Due Date Tuesday', row["Due Date (Tue)"], '', weekColor);
+            });
+
+            const cycleHolidays = holidays
+                .map(holiday => ({ ...holiday, dateObj: parseDateString(holiday.date) }))
+                .filter(holiday => holiday.dateObj && holiday.dateObj >= cycleStart && holiday.dateObj <= cycleEnd)
+                .sort((first, second) => first.dateObj - second.dateObj);
+            const holidayGroups = [];
+            const oneDay = 1000 * 60 * 60 * 24;
+
+            cycleHolidays.forEach(holiday => {
+                const previousGroup = holidayGroups[holidayGroups.length - 1];
+                const previousHoliday = previousGroup?.[previousGroup.length - 1];
+                if (previousHoliday && holiday.dateObj - previousHoliday.dateObj <= oneDay) {
+                    previousGroup.push(holiday);
+                } else {
+                    holidayGroups.push([holiday]);
+                }
+            });
+
+            holidayGroups.forEach(holidayGroup => {
+                const holiday = holidayGroup[0];
+                const holidayNames = holidayGroup.map(item => item.name).join(', ');
+                const lastHoliday = holidayGroup[holidayGroup.length - 1];
+                const rangeEnd = holidayGroup.length > 1 ? new Date(lastHoliday.dateObj) : null;
+                if (rangeEnd) rangeEnd.setDate(rangeEnd.getDate() + 1);
+                markers += marker('holiday', holiday.dateObj, 'HOLIDAY', '', holidayNames, 'a', rangeEnd);
             });
 
             let todayPct = getPercent(today);
+            let dayMarkers = '';
+            let dayCount = Math.max(1, Math.round(totalDuration / (1000 * 60 * 60 * 24)));
+            if (cycleStart && cycleEnd && totalDuration > 0) {
+                const day = new Date(cycleStart);
+                day.setHours(0, 0, 0, 0);
+                const lastDay = new Date(cycleEnd);
+                lastDay.setHours(0, 0, 0, 0);
+
+                while (day <= lastDay) {
+                    dayMarkers += `<span class="timeline-day-marker" style="left: ${getPercent(day)}%;" aria-hidden="true"></span>`;
+                    day.setDate(day.getDate() + 1);
+                }
+            }
 
             timelineContainer.innerHTML = `
                 <div class="timeline-header">
@@ -464,6 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="timeline-bar-container">
                     <div class="timeline-progress-fill" style="width: ${todayPct}%;"></div>
+                    <div class="timeline-day-grid" style="--timeline-day-count: ${dayCount};" aria-hidden="true">${dayMarkers}</div>
                     ${markers}
                     <div class="timeline-today-marker" style="left: ${todayPct}%;">
                         <div class="timeline-today-badge">TODAY</div>
@@ -609,9 +674,9 @@ function renderTableView() {
             <tr class="table-columns-header ${cycleWrapperClass}">
                 <th>Wk</th>
                 <th>WH REV</th>
-                <th>DUE (Mon)</th>
+                <th>DUE (Tuesday)</th>
                 <th>EH REV / Mail</th>
-                <th>DUE (Fri)</th>
+                <th>DUE (Friday)</th>
                 <th>RCS</th>
                 <th>EFF</th>
             </tr>
@@ -648,12 +713,12 @@ function renderTableView() {
             tbody.innerHTML += `
                 <tr class="${rowClass}">
                     <td class="${wkClass}">${row["Wk"]}</td>
-                    <td class="${row["WH RevisionObj"] < today ? 'date-passed' : ''}">${row["WH Revision"]}</td>
-                    <td class="${getDeadlineClass(row["Due Date (Mon)Obj"], cycleIdx, rowIdx)} ${row["Due Date (Mon)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Mon)"]}</td>
-                    <td class="${row["EH Revision / MailObj"] < today ? 'date-passed' : ''}">${row["EH Revision / Mail"]}</td>
-                    <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycleIdx, rowIdx)} ${row["Due Date (Fri)Obj"] < today ? 'date-passed' : ''}">${row["Due Date (Fri)"]}</td>
-                    <td class="${getDeadlineClass(row["RCS CutoffObj"], cycleIdx, rowIdx)} ${row["RCS CutoffObj"] < today ? 'date-passed' : ''}">${row["RCS Cutoff"]}</td>
-                    <td class="effective-date ${row["Effective DateObj"] < today ? 'date-passed' : ''}">${row["Effective Date"]}</td>
+                    <td class="${row["WH RevisionObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["WH RevisionObj"])}"${getHolidayTitle(row["WH RevisionObj"])}>${row["WH Revision"]}</td>
+                    <td class="${getDeadlineClass(row["Due Date (Tue)Obj"], cycleIdx, rowIdx)} ${row["Due Date (Tue)Obj"] < today ? 'date-passed' : ''}${getHolidayClass(row["Due Date (Tue)Obj"])}"${getHolidayTitle(row["Due Date (Tue)Obj"])}>${row["Due Date (Tue)"]}</td>
+                    <td class="${row["EH Revision / MailObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["EH Revision / MailObj"])}"${getHolidayTitle(row["EH Revision / MailObj"])}>${row["EH Revision / Mail"]}</td>
+                    <td class="${getDeadlineClass(row["Due Date (Fri)Obj"], cycleIdx, rowIdx)} ${row["Due Date (Fri)Obj"] < today ? 'date-passed' : ''}${getHolidayClass(row["Due Date (Fri)Obj"])}"${getHolidayTitle(row["Due Date (Fri)Obj"])}>${row["Due Date (Fri)"]}</td>
+                    <td class="${getDeadlineClass(row["RCS CutoffObj"], cycleIdx, rowIdx)} ${row["RCS CutoffObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["RCS CutoffObj"])}"${getHolidayTitle(row["RCS CutoffObj"])}>${row["RCS Cutoff"]}</td>
+                    <td class="effective-date ${row["Effective DateObj"] < today ? 'date-passed' : ''}${getHolidayClass(row["Effective DateObj"])}"${getHolidayTitle(row["Effective DateObj"])}>${row["Effective Date"]}</td>
                 </tr>
             `;
         });

@@ -294,7 +294,6 @@ filtered.forEach(chart => {
     const fileNameWithoutExt = chart.name.replace(/\.[^/.]+$/, "");
     const parts = fileNameWithoutExt.split('_');
     const cycle = parts.length >= 3 ? parts[2] : ""; 
-
     const btn = document.createElement('button');
     btn.className = 'airport-item';
     btn.innerHTML = `

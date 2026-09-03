@@ -1187,6 +1187,32 @@ position: absolute;
     color: #64748b !important;
 }
 
+.holiday-date {
+    color: inherit;
+}
+
+.holiday-date::after {
+    content: "HOLIDAY";
+    display: inline-block;
+    margin-left: 6px;
+    padding: 3px 6px;
+    border-radius: 2px;
+    background: rgba(127, 29, 29, 0.78);
+    color: #ffe4e6;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0;
+    vertical-align: 2px;
+}
+
+.airac-slider-card .holiday-date::after,
+#table-view-container .holiday-date::after {
+    display: block;
+    width: max-content;
+    margin: 3px auto 0;
+}
+
 @media (max-width: 1000px) {
     .airac-dashboard {
         flex-direction: column;
@@ -1281,6 +1307,7 @@ position: absolute;
 .timeline-container {
     padding-left: 28px !important;
     padding-right: 28px !important;
+    padding-bottom: 24px !important;
     --timeline-week-a: #4f46e5;
     --timeline-week-b: #a5b4fc;
 }
@@ -1331,6 +1358,32 @@ position: absolute;
     background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.2));
     border-radius: 4px 0 0 4px;
     overflow: hidden;
+}
+
+.timeline-day-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent calc(100% / var(--timeline-day-count) - 1px),
+        rgba(148, 163, 184, 0.14) calc(100% / var(--timeline-day-count) - 1px),
+        rgba(148, 163, 184, 0.14) calc(100% / var(--timeline-day-count))
+    );
+}
+
+.timeline-day-marker {
+    position: absolute;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(226, 232, 240, 0.65);
+    border-radius: 50%;
+    background: #0f172a;
+    box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.45);
 }
 
 .timeline-marker-fri {
@@ -1430,31 +1483,64 @@ position: absolute;
 .timeline-marker-rcs { color: #facc15; }
 .timeline-marker-rcs span,
 .timeline-marker-rcs small { color: #facc15; background: rgba(250, 204, 21, 0.1); }
+.timeline-marker-holiday { color: #991b1b; }
+.timeline-marker-holiday span,
+.timeline-marker-holiday small { color: #ffe4e6; background: rgba(127, 29, 29, 0.78); }
+.timeline-marker-holiday {
+    width: auto;
+    height: 22px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 3px;
+    background: transparent;
+    z-index: 4;
+    cursor: help;
+}
+.timeline-marker-holiday.timeline-marker-range {
+    border-radius: 3px;
+}
+.timeline-marker-holiday.timeline-marker-range span {
+    text-align: center;
+}
+.timeline-marker-holiday::before {
+    display: none;
+}
+.timeline-marker-holiday span {
+    position: static;
+    display: block;
+    padding: 4px 6px;
+    transform: none;
+    color: #ffe4e6;
+    background: rgba(127, 29, 29, 0.78);
+    font-size: 9px;
+    line-height: 1;
+}
+.timeline-marker-holiday small { display: none; }
 .timeline-marker-fri,
 .timeline-marker-rcs,
-.timeline-marker-mon {
+.timeline-marker-tue {
     color: var(--week-color);
 }
 .timeline-marker-fri span,
 .timeline-marker-fri small,
 .timeline-marker-rcs span,
 .timeline-marker-rcs small,
-.timeline-marker-mon span,
-.timeline-marker-mon small {
+.timeline-marker-tue span,
+.timeline-marker-tue small {
     color: var(--week-color);
     background: color-mix(in srgb, var(--week-color) 12%, transparent);
 }
-.timeline-marker-mon {
+.timeline-marker-tue {
     top: auto;
     bottom: 0;
 }
-.timeline-marker-mon::before {
+.timeline-marker-tue::before {
     top: auto;
     bottom: 0;
     clip-path: polygon(0 100%, 100% 100%, 50% 0);
 }
-.timeline-marker-mon span { top: 12px; }
-.timeline-marker-mon small { top: 25px; }
+.timeline-marker-tue span { top: 12px; }
+.timeline-marker-tue small { top: 25px; }
 .timeline-marker-passed { color: #64748b !important; }
 .timeline-marker-passed span,
 .timeline-marker-passed small { color: #64748b !important; background: rgba(100, 116, 139, 0.12); }
@@ -1468,7 +1554,7 @@ position: absolute;
     height: 100%;
     transform: translateX(-50%);
     background: #10b981;
-    z-index: 2;
+    z-index: 10;
     box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
 }
 
